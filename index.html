@@ -1,0 +1,3675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#0b1015">
+<title>中国地形三维教学仪器 · GS(2016)1609号</title>
+<style>
+/* ============================================================
+   中国地形三维教学仪器 — 测绘仪器视觉体系
+   色：哑光深灰蓝机身 / 琥珀仅表状态 / 地形用阶梯色与地貌色
+   ============================================================ */
+:root{
+  --ink-900:#0b1015;
+  --ink-850:#0e141a;
+  --ink-800:#111922;
+  --ink-780:#141d26;
+  --ink-700:#18222b;
+  --ink-650:#1c2732;
+  --ink-600:#212d38;
+  --line:#2a3641;
+  --line-2:#3a4956;
+  --line-3:#53646f;
+  --txt:#d6dee6;
+  --txt-2:#95a3af;
+  --txt-3:#68767f;
+  --amber:#e0a33e;
+  --alert:#ff6b4a;
+  --s1:#c98c5b; --s2:#d7c377; --s3:#8fbf6a;
+  --l1:#c05a3a; --l2:#f2c14e; --l3:#9b8cf0; --l4:#56c98a; --l5:#5fb8d6;
+  --song:"Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+  --hei:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:"SF Mono","Menlo","Consolas","Roboto Mono","DejaVu Sans Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--ink-900);
+  color:var(--txt);
+  font-family:var(--hei);
+  font-size:13px;
+  line-height:1.5;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;font-size:inherit}
+input{font-family:inherit}
+::selection{background:rgba(224,163,62,.28)}
+
+/* 细颗粒哑光机身 */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:1;
+  background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.014) 0 1px,transparent 1px 3px);
+  mix-blend-mode:screen;
+}
+
+/* 取景框角标 */
+.corners::before,.corners::after,
+.corners > i::before,.corners > i::after{content:"";position:absolute;width:13px;height:13px;border:1px solid var(--line-3)}
+.corners::before{left:0;top:0;border-right:0;border-bottom:0}
+.corners::after{right:0;top:0;border-left:0;border-bottom:0}
+.corners > i::before{left:0;bottom:0;border-right:0;border-top:0}
+.corners > i::after{right:0;bottom:0;border-left:0;border-top:0}
+
+/* ===================== 启动遮罩 ===================== */
+#boot{
+  position:fixed;inset:0;z-index:90;
+  display:grid;grid-template-columns:57% 43%;
+  background:var(--ink-850);
+  transition:opacity .5s ease, visibility .5s;
+}
+#boot.gone{opacity:0;visibility:hidden}
+.boot-l{position:relative;overflow:hidden;border-right:1px solid var(--line);background:var(--ink-900)}
+#globe{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+#globe:active{cursor:grabbing}
+.boot-l-tag{
+  position:absolute;left:26px;top:24px;display:flex;gap:10px;align-items:center;
+  font-size:10px;letter-spacing:.16em;color:var(--txt-3)
+}
+.boot-l-tag b{color:var(--txt-2);font-weight:500}
+.boot-globe-meta{
+  position:absolute;left:26px;bottom:26px;font-size:10.5px;letter-spacing:.08em;color:var(--txt-3);
+  display:flex;gap:18px
+}
+.boot-globe-meta em{font-style:normal;color:var(--txt-2)}
+.globe-scale{
+  position:absolute;right:26px;bottom:26px;width:132px;text-align:right;
+  font-size:9.5px;letter-spacing:.12em;color:var(--txt-3)
+}
+.globe-scale .bar{height:5px;border-left:1px solid var(--line-3);border-right:1px solid var(--line-3);border-bottom:1px solid var(--line-3);margin-bottom:5px}
+
+.boot-r{
+  position:relative;padding:0 64px 0 58px;display:flex;flex-direction:column;justify-content:center;
+  background:var(--ink-850)
+}
+.boot-r::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,var(--line-2) 22%,var(--line-2) 78%,transparent)
+}
+.boot-eyebrow{font-size:10px;letter-spacing:.26em;color:var(--txt-3);margin-bottom:26px}
+.boot-eyebrow i{display:inline-block;width:28px;height:1px;background:var(--line-3);vertical-align:middle;margin-right:12px}
+.boot-title{
+  font-family:var(--song);font-size:62px;line-height:1.06;font-weight:400;
+  letter-spacing:.10em;color:#e8eef4;margin-bottom:6px
+}
+.boot-sub{
+  font-family:var(--song);font-size:26px;letter-spacing:.42em;color:var(--txt-2);
+  font-weight:400;margin-bottom:30px
+}
+.boot-rule{height:1px;background:var(--line);position:relative;margin-bottom:24px}
+.boot-rule::before{content:"";position:absolute;left:0;top:0;width:74px;height:1px;background:var(--amber)}
+.boot-desc{font-size:13.5px;line-height:2;color:var(--txt-2);max-width:340px;margin-bottom:26px}
+.boot-desc b{color:var(--txt);font-weight:500}
+.boot-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:34px;font-size:10.5px;letter-spacing:.06em;color:var(--txt-3)}
+.boot-stats div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:7px}
+.boot-stats b{color:var(--txt);font-weight:400;font-size:11.5px}
+#enterBtn{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:16px;
+  padding:15px 26px 15px 28px;border:1px solid var(--line-2);background:var(--ink-800);
+  font-family:var(--song);font-size:19px;letter-spacing:.16em;color:#e4ebf2;
+  transition:background .18s,border-color .18s,color .18s
+}
+#enterBtn span{font-family:var(--mono);font-size:15px;color:var(--amber);transition:transform .18s}
+#enterBtn:hover{background:#1a2530;border-color:var(--amber);color:#fff}
+#enterBtn:hover span{transform:translateX(5px)}
+#enterBtn:disabled{opacity:.4;cursor:progress}
+#enterBtn:disabled:hover{background:var(--ink-800);border-color:var(--line-2);color:#e4ebf2}
+.boot-foot{
+  position:absolute;left:58px;right:64px;bottom:26px;font-size:10px;letter-spacing:.05em;color:var(--txt-3);
+  display:flex;justify-content:space-between;gap:20px;padding-top:12px;border-top:1px solid var(--line)
+}
+.boot-foot b{color:var(--txt-2);font-weight:500}
+.boot-prog{position:absolute;left:0;right:0;bottom:0;height:2px;background:#1b2530}
+.boot-prog i{display:block;height:100%;width:0;background:var(--amber);transition:width .3s}
+.boot-ld{position:absolute;right:64px;top:30px;font-size:10px;letter-spacing:.14em;color:var(--txt-3);text-align:right}
+
+/* ===================== 主体骨架 ===================== */
+#app{
+  position:fixed;inset:0;z-index:2;display:grid;
+  grid-template-rows:72px 56px 1fr 30px;height:100%;
+  opacity:0;pointer-events:none;transition:opacity .5s ease .1s
+}
+#app.on{opacity:1;pointer-events:auto}
+
+/* ---- 72px 顶栏 ---- */
+#topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;background:var(--ink-800);border-bottom:1px solid var(--line);position:relative
+}
+.brand{display:flex;align-items:center;gap:15px}
+.brand-mark{
+  width:40px;height:40px;border:1px solid var(--line-2);position:relative;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center
+}
+.brand-mark::before,.brand-mark::after{content:"";position:absolute;background:var(--line-3)}
+.brand-mark::before{width:1px;height:14px;left:50%;top:50%;transform:translate(-50%,-50%)}
+.brand-mark::after{height:1px;width:14px;left:50%;top:50%;transform:translate(-50%,-50%)}
+.brand-mark svg{opacity:.85}
+.brand-title{font-family:var(--song);font-size:21px;letter-spacing:.14em;color:#e6edf3;line-height:1.2}
+.brand-sub{font-size:9.5px;letter-spacing:.22em;color:var(--txt-3);margin-top:3px}
+.top-right{display:flex;align-items:center;gap:9px}
+.led-row{
+  display:flex;align-items:center;gap:8px;padding:0 14px 0 10px;height:30px;border-right:1px solid var(--line);
+  font-size:9.5px;letter-spacing:.14em;color:var(--txt-3);margin-right:4px
+}
+.led{width:6px;height:6px;background:#3b4a54;display:block}
+.led.on{background:var(--amber);box-shadow:0 0 0 1px rgba(224,163,62,.22)}
+.led.bad{background:var(--alert)}
+.tbtn{
+  height:30px;padding:0 13px;border:1px solid var(--line);background:transparent;
+  font-size:11px;letter-spacing:.08em;color:var(--txt-2);display:inline-flex;align-items:center;gap:7px;
+  transition:border-color .16s,color .16s,background .16s
+}
+.tbtn:hover{border-color:var(--line-3);color:var(--txt);background:#1a242e}
+.tbtn.act{border-color:rgba(224,163,62,.5);color:var(--amber)}
+.tbtn kbd{
+  font-family:var(--mono);font-size:9px;padding:1px 4px;border:1px solid var(--line);color:var(--txt-3);
+  border-radius:1px
+}
+
+/* ---- 56px 模块轨道 ---- */
+#track{
+  display:flex;align-items:stretch;background:var(--ink-850);border-bottom:1px solid var(--line);
+  position:relative;z-index:6
+}
+.mod{
+  position:relative;display:flex;align-items:center;gap:11px;padding:0 24px;
+  border-right:1px solid var(--line);transition:background .16s;min-width:0
+}
+.mod i{
+  font-family:var(--mono);font-size:10px;font-style:normal;color:var(--txt-3);letter-spacing:.06em;
+  align-self:flex-start;margin-top:15px
+}
+.mod b{font-family:var(--song);font-size:16px;font-weight:400;letter-spacing:.12em;color:var(--txt-2);transition:color .16s}
+.mod small{font-size:9px;letter-spacing:.13em;color:var(--txt-3);display:block;margin-top:1px;transition:color .16s}
+.mod:hover{background:#151f28}
+.mod:hover b{color:var(--txt)}
+.mod.act{background:var(--ink-700)}
+.mod.act b{color:#eef4f9}
+.mod.act i{color:var(--amber)}
+.mod.act small{color:var(--txt-2)}
+.mod::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent;transition:background .16s}
+.mod.act::after{background:var(--amber)}
+.track-right{
+  margin-left:auto;display:flex;align-items:center;padding:0 22px;gap:6px;
+  font-size:9.5px;letter-spacing:.1em;color:var(--txt-3)
+}
+.track-right b{color:var(--txt-2);font-weight:400}
+
+/* ---- 主区 ---- */
+#main{display:grid;grid-template-columns:300px 1fr;min-height:0;background:var(--ink-900)}
+
+/* ---- 300px 控制面板 ---- */
+#panel{
+  background:var(--ink-800);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;min-height:0;position:relative;z-index:5
+}
+.panel-head{
+  padding:15px 18px 13px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;justify-content:space-between
+}
+.panel-title{font-family:var(--song);font-size:17px;letter-spacing:.14em;color:#e6edf3}
+.panel-code{font-size:9px;letter-spacing:.14em;color:var(--txt-3)}
+.panel-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 16px 26px}
+.panel-body::-webkit-scrollbar{width:6px}
+.panel-body::-webkit-scrollbar-track{background:transparent}
+.panel-body::-webkit-scrollbar-thumb{background:#2b3742;border-radius:0}
+.panel-body::-webkit-scrollbar-thumb:hover{background:#3b4a56}
+
+.sect{margin-bottom:20px}
+.sect-h{
+  display:flex;align-items:center;gap:8px;font-size:9.5px;letter-spacing:.2em;color:var(--txt-3);
+  margin-bottom:10px;text-transform:uppercase
+}
+.sect-h::before{content:"";width:5px;height:5px;background:var(--line-3);flex:0 0 auto}
+.sect-h span{flex:1;height:1px;background:var(--line)}
+.sect-h em{font-style:normal;color:var(--txt-3);font-size:9px;letter-spacing:.08em}
+
+/* 台阶卡片 */
+.step-card{
+  position:relative;display:flex;align-items:center;gap:12px;width:100%;
+  padding:11px 12px;border:1px solid var(--line);background:var(--ink-750);
+  margin-bottom:8px;text-align:left;transition:border-color .16s,background .16s,opacity .2s
+}
+.step-card:hover{border-color:var(--line-3);background:#1b2530}
+.step-card .sw{width:4px;height:38px;flex:0 0 auto;background:var(--s1)}
+.step-card .sw.s2{background:var(--s2)}
+.step-card .sw.s3{background:var(--s3)}
+.step-card .nm{display:block;font-family:var(--song);font-size:14.5px;letter-spacing:.1em;color:var(--txt);line-height:1.3}
+.step-card .el{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.01em;color:var(--txt-3);margin-top:4px;line-height:1.45;white-space:normal}
+.step-card .pv{margin-left:auto;flex:0 0 auto;font-family:var(--mono);font-size:9.5px;color:var(--txt-3);text-align:right;line-height:1.55;max-width:62px}
+.step-card.on{border-color:rgba(224,163,62,.55);background:#1e2833}
+.step-card.on .pv{color:var(--amber)}
+.step-card.dim{opacity:.42}
+.step-card .lk{position:absolute;right:8px;top:8px;display:none}
+.step-card.on .lk{display:block}
+
+/* 海拔标尺 */
+.ruler{position:relative;height:126px;border:1px solid var(--line);background:var(--ink-850);margin-top:4px;overflow:hidden}
+.ruler canvas{width:100%;height:100%;display:block}
+
+/* 开关 */
+.sw-row{
+  display:flex;align-items:center;justify-content:space-between;padding:8px 9px;
+  border-bottom:1px solid rgba(42,54,65,.6);cursor:pointer;transition:background .14s
+}
+.sw-row:hover{background:#1b2530}
+.sw-row .lb{font-size:12px;color:var(--txt-2);display:flex;align-items:center;gap:8px}
+.sw-row .lb em{font-style:normal;font-family:var(--mono);font-size:9px;color:var(--txt-3);letter-spacing:.06em}
+.sw-box{width:26px;height:14px;border:1px solid var(--line-3);position:relative;flex:0 0 auto;transition:border-color .16s}
+.sw-box::after{
+  content:"";position:absolute;left:2px;top:2px;width:8px;height:8px;background:#3c4b57;
+  transition:transform .16s,background .16s
+}
+.sw-row.on .sw-box{border-color:rgba(224,163,62,.7)}
+.sw-row.on .sw-box::after{transform:translateX(12px);background:var(--amber)}
+.sw-row.on .lb{color:var(--txt)}
+
+/* 地貌芯片 */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line);
+  font-size:11.5px;color:var(--txt-2);background:var(--ink-750);transition:all .15s;letter-spacing:.04em
+}
+.chip .d{width:7px;height:7px;flex:0 0 auto}
+.chip:hover{border-color:var(--line-3);color:var(--txt)}
+.chip.on{border-color:currentColor;background:#1e2833}
+.chip.on .lb{color:#eef4f9}
+
+/* 圆环图 */
+.donut-wrap{position:relative;width:100%;aspect-ratio:1/1;max-height:220px;margin:2px auto 8px}
+.donut-wrap svg{width:100%;height:100%;display:block;overflow:visible}
+.donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.donut-c b{font-family:var(--mono);font-size:26px;font-weight:400;color:#e9eff5;letter-spacing:-.01em;line-height:1}
+.donut-c span{font-size:9px;letter-spacing:.18em;color:var(--txt-3);margin-top:5px}
+
+/* 详情卡 */
+.detail{border:1px solid var(--line);background:var(--ink-850);padding:13px 14px 12px}
+.detail-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.detail-h .d{width:10px;height:10px;flex:0 0 auto}
+.detail-h b{font-family:var(--song);font-size:16px;font-weight:400;letter-spacing:.1em;color:#e9eff5}
+.detail-h em{font-style:normal;font-family:var(--mono);font-size:9px;color:var(--txt-3);margin-left:auto}
+.drow{display:flex;gap:10px;padding:6px 0;border-top:1px solid rgba(42,54,65,.7);font-size:11.5px;line-height:1.65}
+.drow .k{flex:0 0 62px;color:var(--txt-3);font-size:10.5px;letter-spacing:.06em;padding-top:2px}
+.drow .v{flex:1;color:var(--txt)}
+.drow .v b{font-family:var(--mono);color:#e9eff5;font-weight:400;font-size:12px}
+.note{
+  margin-top:9px;padding:8px 9px;background:#1a232c;border-left:2px solid var(--line-3);
+  font-size:10.5px;line-height:1.7;color:var(--txt-3)
+}
+.note b{color:var(--txt-2);font-weight:500}
+
+/* 连线挑战 */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:center}
+.mnode{
+  padding:7px 9px;border:1px solid var(--line);background:var(--ink-750);font-size:11.5px;color:var(--txt-2);
+  text-align:left;transition:all .15s;position:relative
+}
+.mnode:hover{border-color:var(--line-3);color:var(--txt)}
+.mnode.sel{border-color:var(--amber);color:#fff;background:#1f2a35}
+.mnode.ok{border-color:rgba(86,201,138,.55);color:#9fe0bd;background:#16241f}
+.mnode.bad{animation:shake .34s}
+.mnode .dot{width:6px;height:6px;display:inline-block;margin-right:7px;vertical-align:1px}
+.mlink{height:1px;background:var(--line);position:relative}
+.mlink.ok{background:rgba(86,201,138,.5)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+
+/* 拼图托盘 */
+.tray{border:1px solid var(--line);background:var(--ink-850);padding:8px;display:flex;flex-wrap:wrap;gap:5px}
+.piece{
+  padding:5px 8px;border:1px solid var(--line-2);background:#1a242e;font-size:11px;color:var(--txt-2);
+  cursor:grab;user-select:none;letter-spacing:.04em;transition:border-color .12s,color .12s,background .12s
+}
+.piece:hover{border-color:var(--amber);color:#fff}
+.piece.drag{opacity:.35}
+.piece.bad{animation:shake .34s}
+.piece.done{border-color:rgba(86,201,138,.5);color:#8fd7b0;background:#15221d;cursor:default}
+.piece.active{border-color:var(--amber);background:#243040;color:#fff}
+
+/* 计数块 */
+.meter{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:10px}
+.meter div{flex:1;background:var(--ink-850);padding:8px 6px;text-align:center}
+.meter b{display:block;font-family:var(--mono);font-size:17px;font-weight:400;color:#e9eff5;line-height:1.1}
+.meter span{font-size:9px;letter-spacing:.14em;color:var(--txt-3)}
+.meter .hi b{color:var(--amber)}
+
+/* 按钮组 */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 12px;
+  border:1px solid var(--line-2);background:var(--ink-750);font-size:11.5px;color:var(--txt-2);
+  letter-spacing:.06em;transition:all .15s;width:100%
+}
+.btn:hover{border-color:var(--line-3);color:var(--txt);background:#1e2833}
+.btn.pri{border-color:rgba(224,163,62,.5);color:var(--amber)}
+.btn.pri:hover{background:#241f16;border-color:var(--amber)}
+.btn.sm{padding:6px 9px;font-size:10.5px;width:auto}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:6px}
+
+/* ---- 三维视窗 ---- */
+#stage{position:relative;overflow:hidden;background:var(--ink-900);min-width:0}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+#stage .corners{position:absolute;inset:14px;pointer-events:none;z-index:3}
+.reticle{
+  position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);
+  pointer-events:none;z-index:3;opacity:.5
+}
+.reticle::before,.reticle::after{content:"";position:absolute;background:var(--line-3)}
+.reticle::before{left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%);clip-path:polygon(0 0,100% 0,100% 33%,0 33%,0 67%,100% 67%,100% 100%,0 100%)}
+.reticle::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%);clip-path:polygon(0 0,33% 0,33% 100%,0 100%,67% 0,100% 0,100% 100%,67% 100%)}
+
+.stage-top{
+  position:absolute;left:30px;top:26px;z-index:4;display:flex;flex-direction:column;gap:5px;
+  font-size:9.5px;letter-spacing:.14em;color:var(--txt-3);pointer-events:none
+}
+.stage-top b{color:var(--txt-2);font-weight:400}
+.stage-top .gsline{margin-top:3px;color:#7d8b98}
+.stage-top .gsline b{color:#b9c4ce}
+.stage-top .tt{
+  font-family:var(--song);font-size:15px;letter-spacing:.2em;color:#dfe7ee;margin-bottom:2px
+}
+
+/* 南海诸岛附图 */
+#inset{
+  position:absolute;right:24px;bottom:24px;z-index:4;width:150px;
+  border:1px solid var(--line-2);background:rgba(13,19,25,.92);padding:1px
+}
+#scs{display:block;width:100%;height:196px}
+.inset-cap{
+  display:flex;justify-content:space-between;align-items:center;padding:4px 6px 5px;
+  font-size:9.5px;letter-spacing:.1em;color:var(--txt-2);border-top:1px solid var(--line)
+}
+.inset-cap em{font-style:normal;font-family:var(--mono);font-size:8px;color:var(--txt-3)}
+
+/* 罗盘 */
+#compass{position:absolute;left:26px;bottom:26px;z-index:4;width:74px;height:74px;opacity:.9}
+#compass svg{width:100%;height:100%;display:block}
+.compass-lb{position:absolute;left:26px;bottom:104px;font-size:9px;letter-spacing:.14em;color:var(--txt-3)}
+
+/* 剖面面板 */
+#profilePanel{
+  position:absolute;left:22px;right:186px;bottom:22px;z-index:7;height:0;overflow:hidden;
+  border:1px solid var(--line-2);background:rgba(12,18,24,.96);
+  transition:height .42s cubic-bezier(.22,.9,.3,1),opacity .3s;opacity:0;pointer-events:none
+}
+#profilePanel.on{height:222px;opacity:1;pointer-events:auto}
+.pp-head{
+  display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--line);
+  font-size:9.5px;letter-spacing:.14em;color:var(--txt-3)
+}
+.pp-head b{font-family:var(--song);font-size:13.5px;letter-spacing:.12em;color:#e2e9f0;font-weight:400}
+.pp-head .sp{flex:1}
+.pp-head .x{cursor:pointer;padding:2px 6px;border:1px solid var(--line);font-family:var(--mono)}
+.pp-head .x:hover{border-color:var(--alert);color:var(--alert)}
+#profileCv{display:block;width:100%;height:calc(100% - 36px)}
+
+
+/* 三维视窗内的浮动详情卡（模块二） */
+#detailCard{position:absolute;right:24px;top:26px;z-index:5;width:240px;display:none}
+#detailCard.on{display:block}
+#detailCard .detail{background:rgba(13,19,25,.94)}
+
+/* 拖拽芯片层 */
+#chips{position:absolute;inset:0;z-index:6;pointer-events:none}
+#chips .pchip{
+  position:absolute;transform:translate(-50%,-50%);padding:3px 8px;border:1px solid var(--line-2);
+  background:rgba(16,23,30,.9);font-size:10.5px;color:var(--txt-2);white-space:nowrap;
+  pointer-events:auto;cursor:grab;letter-spacing:.04em;transition:border-color .12s,color .12s
+}
+#chips .pchip:hover{border-color:var(--amber);color:#fff}
+#chips .pchip.dragging{opacity:.7;border-color:var(--amber);z-index:9}
+#chips .pchip.locked{border-color:rgba(86,201,138,.55);color:#93dbb4;background:rgba(18,32,26,.92);cursor:default}
+#chips .slot{
+  position:absolute;width:9px;height:9px;transform:translate(-50%,-50%);border:1px solid var(--line-3);
+  pointer-events:none
+}
+#chips .slot.hot{border-color:var(--amber);background:rgba(224,163,62,.25)}
+#chips .slot.filled{border-color:rgba(86,201,138,.6);background:rgba(86,201,138,.18)}
+
+/* 挑战浮层（盲盒打靶） */
+#target{
+  position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:8;
+  border:1px solid var(--line-2);background:rgba(13,19,25,.95);padding:11px 18px;min-width:390px;
+  display:none
+}
+#target.on{display:block}
+.tg-top{display:flex;align-items:center;gap:12px;font-size:9.5px;letter-spacing:.14em;color:var(--txt-3);margin-bottom:7px}
+.tg-q{font-family:var(--song);font-size:15px;letter-spacing:.1em;color:#e9eff5;display:flex;align-items:baseline;gap:10px}
+.tg-q em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--amber)}
+.tg-bar{height:2px;background:#212c36;margin-top:9px;position:relative;overflow:hidden}
+.tg-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--amber);width:100%;transform-origin:left}
+.tg-bar.warn i{background:var(--alert)}
+
+/* toast */
+#toast{
+  position:absolute;left:50%;bottom:36px;transform:translate(-50%,10px);z-index:9;
+  padding:9px 16px;border:1px solid var(--line-2);background:rgba(13,19,25,.96);
+  font-size:12px;letter-spacing:.06em;color:var(--txt);opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .22s
+}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#toast.ok{border-color:rgba(86,201,138,.6)}
+#toast.bad{border-color:rgba(255,107,74,.7)}
+#toast b{color:var(--amber);font-family:var(--mono);font-weight:400}
+
+/* 切换模块扫描线 */
+#scan{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden}
+#scan i{
+  position:absolute;left:0;right:0;height:2px;top:0;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(224,163,62,.85),transparent)
+}
+#scan.run i{animation:sweep .6s cubic-bezier(.3,.7,.4,1) forwards}
+@keyframes sweep{
+  0%{opacity:0;transform:translateY(0)}
+  12%{opacity:1}
+  100%{opacity:0;transform:translateY(var(--h,700px))}
+}
+
+/* ---- 30px 页脚 ---- */
+#footer{
+  display:flex;align-items:center;gap:0;background:var(--ink-850);border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--txt-3);
+  padding:0 16px;overflow:hidden;white-space:nowrap
+}
+#footer .fcell{display:flex;align-items:center;gap:6px;padding:0 14px;border-right:1px solid var(--line);height:100%}
+#footer .fcell:first-child{padding-left:0}
+#footer .fcell b{color:var(--txt);font-weight:400}
+#footer .fcell i{font-style:normal;color:var(--txt-3);font-size:9px;letter-spacing:.12em}
+#footer .sp{flex:1}
+#footer .gs{color:var(--txt-2)}
+#footer .gs b{color:var(--amber);font-weight:400}
+
+/* 帮助 */
+#help{
+  position:fixed;inset:0;z-index:95;background:rgba(8,12,16,.86);display:none;
+  align-items:center;justify-content:center;padding:40px
+}
+#help.on{display:flex}
+.help-card{
+  width:min(760px,92vw);max-height:84vh;overflow:auto;background:var(--ink-800);
+  border:1px solid var(--line-2);padding:30px 34px 26px;position:relative
+}
+.help-card h2{font-family:var(--song);font-size:22px;font-weight:400;letter-spacing:.16em;color:#eaf0f6;margin-bottom:4px}
+.help-card .sub{font-size:10px;letter-spacing:.2em;color:var(--txt-3);margin-bottom:22px}
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 34px}
+.hrow{display:flex;gap:12px;padding:8px 0;border-top:1px solid rgba(42,54,65,.7);font-size:12px;color:var(--txt-2)}
+.hrow kbd{
+  font-family:var(--mono);font-size:10.5px;min-width:58px;color:var(--amber);border:1px solid var(--line);
+  padding:1px 6px;text-align:center;height:20px;line-height:17px;background:#141d25
+}
+.help-close{position:absolute;right:18px;top:18px;width:26px;height:26px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--txt-2);font-family:var(--mono)}
+.help-close:hover{border-color:var(--alert);color:var(--alert)}
+.help-note{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:10.5px;line-height:1.9;color:var(--txt-3)}
+.help-note b{color:var(--txt-2);font-weight:500}
+
+/* 空态 */
+.empty{padding:18px 4px;font-size:11.5px;color:var(--txt-3);line-height:1.9;text-align:center;border:1px dashed var(--line)}
+
+/* ============================================================
+   响应式层 — 桌面（投影）/ 平板 / 手机横屏 / 手机竖屏 / 微信内置浏览器
+   所有尺寸以视口为单位，不写死 px 宽度；纵向高度用 --vvh 兜底
+   ============================================================ */
+
+/* 视口高度：100dvh 优先，微信工具栏遮挡时由 JS 写入 --vvh 兜底 */
+#boot,#app{height:100vh;height:100dvh;height:var(--vvh,100dvh)}
+
+/* 触屏：画布自己接管手势，不参与页面滚动 / 长按菜单 */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+#gl,#globe,#stage{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* ---------- 平板 / 窄桌面 ---------- */
+@media (max-width:1180px){
+  #main{grid-template-columns:270px 1fr}
+  .boot-title{font-size:48px;font-size:clamp(34px,4.4vw,52px)}
+  .mod{padding:0 16px}
+  .mod small{display:none}
+}
+@media (max-width:980px){
+  #main{grid-template-columns:210px 1fr;grid-template-columns:clamp(180px,24vw,240px) 1fr}
+  .boot-r{padding:0 34px 0 30px}
+  .boot-title{font-size:34px;font-size:clamp(26px,5vw,42px)}
+  .boot-sub{font-size:16px;font-size:clamp(13px,2.2vw,22px)}
+  .mod{padding:0 12px;gap:8px}
+  .mod b{font-size:14px}
+  .track-right{display:none}
+  #detailCard{width:200px}
+  #profilePanel{right:150px}
+}
+
+/* ---------- 矮屏：手机横屏（≈844×390 / 667×375）与投影小窗 ---------- */
+@media (max-height:560px){
+  /* 骨架：38 / 32 / 1fr / 20 */
+  #app{grid-template-rows:38px 32px 1fr 20px}
+
+  #topbar{padding:0 12px}
+  .brand{gap:9px}
+  .brand-mark{width:28px;height:28px}
+  .brand-mark svg{width:16px;height:16px}
+  .brand-title{font-size:15px;letter-spacing:.1em}
+  .brand-sub{display:none}
+  .led-row{height:24px;padding:0 9px 0 7px;font-size:8.5px;margin-right:2px}
+  .led{width:5px;height:5px}
+  .tbtn{height:24px;padding:0 9px;font-size:10px;gap:5px}
+  .tbtn kbd{display:none}
+
+  .mod{padding:0 10px;gap:6px}
+  .mod b{font-size:12.5px;letter-spacing:.06em}
+  .mod i{font-size:8.5px;margin-top:8px}
+  .mod small{display:none}
+
+  #main{grid-template-columns:180px 1fr;grid-template-columns:clamp(148px,24vw,200px) 1fr}
+  .panel-head{padding:7px 10px 6px}
+  .panel-title{font-size:13px;letter-spacing:.1em}
+  .panel-code{font-size:8px}
+  .panel-body{padding:8px 9px 14px}
+  .sect{margin-bottom:11px}
+  .sect-h{font-size:8px;letter-spacing:.14em;margin-bottom:6px}
+  .step-card{padding:6px 8px;gap:8px;margin-bottom:5px}
+  .step-card .nm{font-size:12px;letter-spacing:.04em;line-height:1.2}
+  .step-card .el{font-size:8px;margin-top:2px;line-height:1.3}
+  .step-card .pv{font-size:7.5px;max-width:50px;line-height:1.35}
+  .step-card .sw{width:3px;height:28px}
+  .ruler{height:78px}
+  .meter{margin-bottom:7px}
+  .meter div{padding:5px 4px}
+  .meter b{font-size:13px}
+  .meter span{font-size:7.5px;letter-spacing:.08em}
+  .btn{padding:5px 8px;font-size:10px}
+  .btn.sm{padding:4px 7px;font-size:9px}
+  .note{font-size:9px;line-height:1.7}
+  .donut-wrap{max-height:120px}
+  .chip{padding:4px 7px;font-size:9.5px}
+
+  #footer{padding:0 8px;font-size:8.5px}
+  #footer .fcell{padding:0 8px;gap:4px}
+  #footer .fcell i{font-size:7.5px}
+
+  .stage-top{left:12px;top:9px;font-size:8px;gap:2px;letter-spacing:.08em}
+  .stage-top .tt{font-size:11.5px;letter-spacing:.14em}
+  #stage .corners{inset:8px}
+  .reticle{width:18px;height:18px}
+  #inset{width:82px;right:10px;bottom:10px}
+  #scs{height:100px}
+  .inset-cap{padding:2px 4px 3px;font-size:7px}
+  .inset-cap em{font-size:6.5px}
+  #compass{width:46px;height:46px;left:12px;bottom:12px}
+  .compass-lb{left:12px;bottom:62px;font-size:7px}
+  #detailCard{right:10px;top:12px;width:178px}
+  #detailCard .detail{padding:8px 10px}
+  #profilePanel{left:10px;right:96px;bottom:10px}
+  #profilePanel.on{height:140px}
+  .pp-head{padding:5px 9px;font-size:8px;gap:8px}
+  .pp-head b{font-size:11px}
+  #profileCv{height:calc(100% - 26px)}
+  #target{top:8px;padding:6px 10px;min-width:0;width:320px;width:min(320px,64%)}
+  .tg-top{font-size:8px;margin-bottom:4px;gap:8px}
+  .tg-q{font-size:12px}
+  .tg-bar{margin-top:6px}
+  #toast{bottom:12px;padding:6px 10px;font-size:10.5px}
+  .help-card{padding:16px 18px 14px;max-height:92vh}
+  .help-card h2{font-size:16px}
+  .help-card .sub{font-size:8px;margin-bottom:12px}
+  .help-grid{grid-template-columns:1fr 1fr;gap:0 18px}
+  .hrow{font-size:10px;padding:4px 0;gap:8px}
+  .hrow kbd{font-size:9px;min-width:48px;height:16px;line-height:13px}
+  .help-note{font-size:8.5px;line-height:1.7;margin-top:10px;padding-top:8px}
+
+  /* 首页：左球右字，纵向压缩 */
+  #boot{grid-template-columns:54% 46%}
+  .boot-l-tag{left:14px;top:12px;font-size:8px;gap:6px}
+  .boot-globe-meta{left:14px;bottom:12px;font-size:8px;gap:10px}
+  .globe-scale{right:14px;bottom:12px;width:80px;font-size:7px}
+  .boot-r{padding:0 20px 0 18px}
+  .boot-eyebrow{font-size:7.5px;letter-spacing:.16em;margin-bottom:9px}
+  .boot-eyebrow i{width:16px;margin-right:7px}
+  .boot-title{font-size:24px;font-size:clamp(22px,4.8vh,34px);letter-spacing:.07em;margin-bottom:2px}
+  .boot-sub{font-size:12px;font-size:clamp(11px,2.1vh,15px);letter-spacing:.32em;margin-bottom:9px}
+  .boot-rule{margin-bottom:9px}
+  .boot-desc{font-size:9.5px;line-height:1.6;margin-bottom:9px;max-width:none}
+  .boot-stats{grid-template-columns:1fr 1fr;gap:3px 12px;margin-bottom:11px;font-size:7.5px}
+  .boot-stats div{padding-bottom:3px}
+  .boot-stats b{font-size:8.5px}
+  #enterBtn{padding:8px 14px;font-size:13px;gap:9px;letter-spacing:.1em}
+  #enterBtn span{font-size:12px}
+  .boot-ld{right:18px;top:11px;font-size:7.5px}
+  .boot-foot{left:18px;right:20px;bottom:8px;font-size:7px;padding-top:5px;letter-spacing:.02em}
+
+  /* iPhone 横屏：刘海与底部横条安全区（不支持 env() 的机型自动忽略） */
+  .panel-head,.panel-body{padding-left:max(9px, env(safe-area-inset-left))}
+  #footer{padding-left:max(8px, env(safe-area-inset-left));padding-right:max(8px, env(safe-area-inset-right))}
+  #inset{right:max(10px, env(safe-area-inset-right));bottom:max(10px, env(safe-area-inset-bottom))}
+  #compass{left:max(12px, env(safe-area-inset-left));bottom:max(12px, env(safe-area-inset-bottom))}
+  .compass-lb{left:max(12px, env(safe-area-inset-left))}
+  .stage-top{left:max(12px, env(safe-area-inset-left))}
+}
+
+/* ---------- 手机竖屏：主页改为上下堆叠，主体画布在上、面板在下 ---------- */
+@media (orientation:portrait) and (max-width:1024px){
+  #boot{grid-template-columns:1fr;grid-template-rows:minmax(0,40%) minmax(0,60%)}
+  .boot-l{border-right:0;border-bottom:1px solid var(--line)}
+  .boot-l-tag{left:16px;top:14px;font-size:8px}
+  .boot-globe-meta{left:16px;bottom:12px;font-size:8px;gap:10px}
+  .globe-scale{display:none}
+  .boot-r{padding:14px 22px 48px;justify-content:flex-start;overflow-y:auto}
+  .boot-eyebrow{font-size:8px;margin-bottom:12px}
+  .boot-title{font-size:32px;font-size:clamp(26px,8.4vw,40px);letter-spacing:.08em}
+  .boot-sub{font-size:16px;font-size:clamp(12px,4vw,18px);letter-spacing:.3em;margin-bottom:14px}
+  .boot-rule{margin-bottom:14px}
+  .boot-desc{font-size:11.5px;line-height:1.8;max-width:none;margin-bottom:14px}
+  .boot-stats{gap:6px 14px;margin-bottom:16px;font-size:9px}
+  .boot-stats b{font-size:10px}
+  #enterBtn{padding:11px 20px;font-size:15px}
+  .boot-ld{right:22px;top:16px;font-size:8.5px}
+  .boot-foot{left:22px;right:22px;bottom:10px;font-size:7.5px}
+
+  #app{grid-template-rows:40px 40px 1fr 22px}
+  #topbar{padding:0 10px}
+  .brand-mark{display:none}
+  .brand-title{font-size:13px;letter-spacing:.08em}
+  .brand-sub{display:none}
+  .led-row{display:none}
+  .tbtn{height:24px;padding:0 8px;font-size:10px;gap:4px}
+  .tbtn kbd{display:none}
+  #track{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #track::-webkit-scrollbar{display:none}
+  .mod{flex:0 0 auto;padding:0 12px}
+  .mod small{display:none}
+  .track-right{display:none}
+
+  #main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,42%)}
+  #stage{grid-row:1}
+  #panel{grid-row:2;border-right:0;border-top:1px solid var(--line)}
+  .panel-head{padding:8px 12px}
+  .panel-title{font-size:14px}
+  .panel-body{padding:8px 12px 20px}
+
+  #footer{padding:0 5px;font-size:7.5px}
+  #footer .fcell{padding:0 5px;gap:3px}
+  #footer .fcell i{font-size:6.5px;letter-spacing:.04em}
+  #footer .fcell:nth-child(4),#footer .fcell:nth-child(5),#footer .fcell:nth-child(7){display:none}
+
+  .stage-top{left:10px;top:8px;font-size:7.5px}
+  .stage-top .tt{font-size:11px}
+  .stage-top .gsline{display:none}
+  #stage .corners{inset:8px}
+  #inset{width:72px;right:8px;bottom:8px}
+  #scs{height:90px}
+  .inset-cap{font-size:6.5px;padding:2px 4px}
+  .inset-cap em{display:none}
+  #compass{width:40px;height:40px;left:8px;bottom:8px}
+  .compass-lb{display:none}
+  #detailCard{width:150px;right:8px;top:8px}
+  #profilePanel{left:8px;right:8px;bottom:8px}
+  #profilePanel.on{height:132px}
+  #target{width:280px;width:min(280px,80%);min-width:0;top:6px;padding:6px 9px}
+  .tg-q{font-size:11px}
+  .help-grid{grid-template-columns:1fr}
+  .help-card{padding:16px 16px 14px;max-height:86vh}
+
+  #footer{padding-left:max(5px, env(safe-area-inset-left));padding-right:max(5px, env(safe-area-inset-right))}
+  .panel-head,.panel-body{padding-left:max(12px, env(safe-area-inset-left))}
+  #inset{right:max(8px, env(safe-area-inset-right));bottom:max(8px, env(safe-area-inset-bottom))}
+}
+
+/* ============================================================
+   竖屏旋转提示遮罩（z-index 高于启动页与帮助层）
+   ============================================================ */
+#rotMask{
+  position:fixed;inset:0;z-index:200;display:none;
+  align-items:center;justify-content:center;flex-direction:column;
+  background:rgba(7,10,14,.94);text-align:center;padding:24px 22px;
+  transition:opacity .25s ease
+}
+#rotMask.on{display:flex}
+#rotMask .rm-frame{position:absolute;inset:16px;border:1px solid #2a3641;pointer-events:none}
+#rotMask .rm-frame i{position:absolute;inset:0}
+#rotMask .rm-frame::before,#rotMask .rm-frame::after,
+#rotMask .rm-frame i::before,#rotMask .rm-frame i::after{
+  content:"";position:absolute;width:14px;height:14px;border:1px solid #53646f
+}
+#rotMask .rm-frame::before{left:-1px;top:-1px;border-right:0;border-bottom:0}
+#rotMask .rm-frame::after{right:-1px;top:-1px;border-left:0;border-bottom:0}
+#rotMask .rm-frame i::before{left:-1px;bottom:-1px;border-right:0;border-top:0}
+#rotMask .rm-frame i::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+#rotMask .rm-tag{
+  position:absolute;left:16px;top:16px;font-family:var(--mono);font-size:9px;
+  letter-spacing:.2em;color:var(--txt-3);padding:6px 0 0 14px
+}
+#rotMask .rm-tag b{color:var(--txt-2);font-weight:400}
+.rm-dial{position:relative;width:150px;height:150px;margin-bottom:24px}
+.rm-dial svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.rm-phone{
+  position:absolute;left:50%;top:50%;width:44px;height:76px;margin:-38px 0 0 -22px;
+  border:1.5px solid #e6edf3;border-radius:4px;
+  animation:rotDev 2.8s cubic-bezier(.62,0,.38,1) infinite
+}
+.rm-phone::before{content:"";position:absolute;left:50%;top:5px;width:12px;height:2px;background:#53646f;transform:translateX(-50%)}
+.rm-phone::after{content:"";position:absolute;left:50%;bottom:5px;width:15px;height:1px;background:#8fa0ad;transform:translateX(-50%)}
+@keyframes rotDev{
+  0%,16%{transform:rotate(0deg)}
+  56%,100%{transform:rotate(90deg)}
+}
+.rm-t{
+  font-family:var(--song);font-size:20px;font-size:clamp(19px,4.8vw,26px);letter-spacing:.12em;
+  color:#eaf0f6;line-height:1.4
+}
+.rm-s{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--txt-3);margin-top:10px;line-height:1.9}
+.rm-skip{
+  margin-top:28px;padding:0 2px 4px;border-bottom:1px solid var(--line-2);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--txt-2)
+}
+.rm-skip:active{color:var(--amber);border-color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- ============ 竖屏旋转提示 ============ -->
+<div id="rotMask" aria-hidden="true">
+  <div class="rm-frame"><i></i></div>
+  <div class="rm-tag mono">ORIENTATION · <b>横屏标定</b></div>
+  <div class="rm-dial">
+    <svg viewBox="0 0 150 150" aria-hidden="true">
+      <circle cx="75" cy="75" r="58" fill="none" stroke="#2a3641" stroke-width="1" stroke-dasharray="1 7"/>
+      <circle cx="75" cy="75" r="46" fill="none" stroke="#1a242e" stroke-width="1"/>
+      <path d="M75 17 A58 58 0 0 1 133 75" fill="none" stroke="#e0a33e" stroke-width="1.5" opacity=".85"/>
+      <path d="M133 75 l-4.6 -9.6 l9.6 1.4 z" fill="#e0a33e"/>
+      <line x1="75" y1="11" x2="75" y2="19" stroke="#53646f" stroke-width="1"/>
+      <line x1="11" y1="75" x2="19" y2="75" stroke="#53646f" stroke-width="1"/>
+      <line x1="131" y1="75" x2="139" y2="75" stroke="#53646f" stroke-width="1"/>
+    </svg>
+    <div class="rm-phone"></div>
+  </div>
+  <div class="rm-t">请横置手机以获得最佳体验</div>
+  <div class="rm-s">ROTATE TO LANDSCAPE · 本仪器按 16:9 横向投影标定</div>
+  <button class="rm-skip" id="rotSkip">仍要竖屏浏览 ›</button>
+</div>
+
+<!-- ============ 启动遮罩 ============ -->
+<div id="boot">
+  <div class="boot-l">
+    <canvas id="globe"></canvas>
+    <div class="boot-l-tag mono"><b>GLOBE</b><span>·</span><span>正射投影 / ORTHOGRAPHIC</span></div>
+    <div class="boot-globe-meta mono">
+      <span>经度 <em id="bgLon">105.0°E</em></span>
+      <span>纬度 <em id="bgLat">35.0°N</em></span>
+      <span>拖动地球可旋转</span>
+    </div>
+    <div class="globe-scale mono">
+      <div class="bar"></div>
+      1 : 90 000 000
+    </div>
+    <div style="position:absolute;inset:22px;pointer-events:none" class="corners"><i></i></div>
+  </div>
+  <div class="boot-r">
+    <div class="boot-eyebrow mono"><i></i>SURVEY INSTRUMENT · CN-TERRAIN 3D</div>
+    <h1 class="boot-title">中国地形</h1>
+    <div class="boot-sub">三维教学仪器</div>
+    <div class="boot-rule"></div>
+    <p class="boot-desc">
+      以<b>三级阶梯</b>为骨架的量算台：等高线、经纬网、海拔标尺与剖面帘幕合成一台可供全班指读的地形仪器。
+    </p>
+    <div class="boot-stats mono">
+      <div><span>DEM 网格</span><b id="stGrid">—</b></div>
+      <div><span>等高距</span><b>500 m</b></div>
+      <div><span>山脉骨架</span><b>25 条</b></div>
+      <div><span>教学模块</span><b>04</b></div>
+    </div>
+    <button id="enterBtn" disabled>进入三维地形<span>→</span></button>
+    <div class="boot-ld mono" id="bootLd">正在标定地形基准面 …</div>
+    <div class="boot-prog"><i id="bootProg"></i></div>
+    <div class="boot-foot mono">
+      <span>审图号 <b>GS（2016）1609号</b></span>
+      <span>南海诸岛见附图</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 主体 ============ -->
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8fa0ad" stroke-width="1">
+          <path d="M2 17 L7.5 8 L11 13 L14 6.5 L20 17 Z"/>
+          <circle cx="16.4" cy="5.4" r="1.6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">中国地形三维教学仪器</div>
+        <div class="brand-sub mono">CN-TERRAIN / SURVEY CONSOLE · 初中地理</div>
+      </div>
+    </div>
+    <div class="top-right">
+      <div class="led-row mono"><span class="led on" id="ledSys"></span><span id="ledTxt">系统就绪</span></div>
+      <button class="tbtn" id="btnSound">音效 <span id="soundTxt">开</span></button>
+      <button class="tbtn" id="btnFull">全屏 <kbd>F</kbd></button>
+      <button class="tbtn" id="btnHelp">帮助 <kbd>?</kbd></button>
+    </div>
+  </header>
+
+  <nav id="track">
+    <button class="mod act" data-mod="1"><i>01</i><div><b>三级阶梯</b><small class="mono">STEPPED RELIEF</small></div></button>
+    <button class="mod" data-mod="2"><i>02</i><div><b>地形图谱</b><small class="mono">LANDFORM ATLAS</small></div></button>
+    <button class="mod" data-mod="3"><i>03</i><div><b>山脉拼图</b><small class="mono">RANGE ASSEMBLY</small></div></button>
+    <button class="mod" data-mod="4"><i>04</i><div><b>量算台</b><small class="mono">MEASURE BENCH</small></div></button>
+    <div class="track-right mono">
+      <span>左键<b>旋转</b></span><span>·</span><span>右键<b>平移</b></span><span>·</span><span>滚轮<b>缩放</b></span>
+    </div>
+  </nav>
+
+  <main id="main">
+    <aside id="panel">
+      <div class="panel-head">
+        <div class="panel-title" id="panelTitle">三级阶梯</div>
+        <div class="panel-code mono" id="panelCode">MOD-01</div>
+      </div>
+      <div class="panel-body" id="panelBody"></div>
+    </aside>
+
+    <section id="stage">
+      <canvas id="gl"></canvas>
+      <div class="corners"><i></i></div>
+      <div class="reticle"></div>
+
+      <div class="stage-top mono">
+        <div class="tt" id="stageTitle">三级阶梯 · 西高东低</div>
+        <div><b>视点</b> <span id="stView">—</span></div>
+        <div><b>基准</b> 1985 国家高程基准 · 等高距 500 m</div>
+        <div class="gsline">审图号 <b>GS（2016）1609号</b> · 南海诸岛见右下附图</div>
+      </div>
+
+      <div id="detailCard"></div>
+
+      <div id="chips"></div>
+
+      <div id="target">
+        <div class="tg-top mono"><span>盲盒打靶</span><span id="tgIdx">01 / 10</span><span style="margin-left:auto">限时 <b id="tgTime">20.0</b> s</span></div>
+        <div class="tg-q">请指出：<em id="tgName">—</em></div>
+        <div class="tg-bar"><i id="tgBar"></i></div>
+      </div>
+
+      <div class="compass-lb mono">方位</div>
+      <div id="compass">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="34" fill="none" stroke="#3a4956" stroke-width="1"/>
+          <circle cx="50" cy="50" r="27" fill="none" stroke="#2a3641" stroke-width="1"/>
+          <g id="compassRose">
+            <path d="M50 16 L54 46 L50 50 L46 46 Z" fill="#e0a33e"/>
+            <path d="M50 84 L46 54 L50 50 L54 54 Z" fill="#53646f"/>
+            <line x1="50" y1="12" x2="50" y2="18" stroke="#95a3af" stroke-width="1"/>
+            <line x1="50" y1="82" x2="50" y2="88" stroke="#53646f" stroke-width="1"/>
+            <line x1="12" y1="50" x2="18" y2="50" stroke="#53646f" stroke-width="1"/>
+            <line x1="82" y1="50" x2="88" y2="50" stroke="#53646f" stroke-width="1"/>
+          </g>
+          <text x="50" y="9" text-anchor="middle" font-size="7" fill="#95a3af" font-family="monospace">N</text>
+        </svg>
+      </div>
+
+      <div id="inset">
+        <canvas id="scs"></canvas>
+        <div class="inset-cap"><span>南海诸岛</span><em>附图 1:120M</em></div>
+      </div>
+
+      <div id="profilePanel">
+        <div class="pp-head">
+          <b>地形剖面</b>
+          <span id="ppInfo" class="mono">沿 30°N · 80°E — 122°E</span>
+          <span class="sp"></span>
+          <span class="mono" id="ppStat">—</span>
+          <span class="x" id="ppClose">✕</span>
+        </div>
+        <canvas id="profileCv"></canvas>
+      </div>
+
+      <div id="toast"></div>
+      <div id="scan"><i></i></div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <div class="fcell"><i>方位</i><b id="fAz">000.0°</b></div>
+    <div class="fcell"><i>俯仰</i><b id="fEl">+42.0°</b></div>
+    <div class="fcell"><i>缩放</i><b id="fZm">100%</b></div>
+    <div class="fcell"><i>光标</i><b id="fCur">—</b></div>
+    <div class="fcell"><i>海拔</i><b id="fHgt">—</b></div>
+    <div class="sp"></div>
+    <div class="fcell"><i>等高距</i><b>500 m</b></div>
+    <div class="fcell gs">审图号 <b>GS（2016）1609号</b></div>
+    <div class="fcell gs">南海诸岛 <b>附图</b></div>
+  </footer>
+</div>
+
+<div id="help">
+  <div class="help-card">
+    <button class="help-close" id="helpClose">✕</button>
+    <h2>仪器使用说明</h2>
+    <div class="sub mono">OPERATING NOTES · CN-TERRAIN 3D</div>
+    <div class="help-grid">
+      <div>
+        <div class="hrow"><kbd>左键拖</kbd><span>旋转视点（绕地心方位角）</span></div>
+        <div class="hrow"><kbd>右键拖</kbd><span>平移图版</span></div>
+        <div class="hrow"><kbd>滚轮</kbd><span>缩放 20% — 450%</span></div>
+        <div class="hrow"><kbd>双击</kbd><span>把该点居中并复位仰角</span></div>
+        <div class="hrow"><kbd>1 / 2 / 3 / 4</kbd><span>切换四个模块</span></div>
+        <div class="hrow"><kbd>R</kbd><span>整机复位</span></div>
+      </div>
+      <div>
+        <div class="hrow"><kbd>F</kbd><span>全屏（投影）</span></div>
+        <div class="hrow"><kbd>M</kbd><span>总静音</span></div>
+        <div class="hrow"><kbd>?</kbd><span>本说明</span></div>
+        <div class="hrow"><kbd>Esc</kbd><span>关闭浮层 / 退出全屏</span></div>
+        <div class="hrow"><kbd>← →</kbd><span>微调方位 5°</span></div>
+        <div class="hrow"><kbd>↑ ↓</kbd><span>微调俯仰 3°</span></div>
+      </div>
+    </div>
+    <div class="help-note">
+      <b>触屏操作：</b>单指拖动旋转；双指捏合缩放、双指拖动平移；双击图版使该点居中；竖屏时请横置手机，仪器按 16:9 横向投影标定。<br>
+      <b>读数口径：</b>面积比例、阶梯海拔、山脉长度均取教材通行表述；凡教材与另一说并存者，已在相应位置标注“另有一说”。<br>
+      <b>地图依据：</b>审图号 GS（2016）1609号；图幅右下角附「南海诸岛」三维附图。<br>
+      <b>高程：</b>1985 国家高程基准，DEM 为教学示意模型，垂直方向作夸大处理，不作量测依据。
+    </div>
+  </div>
+</div>
+<script>
+/* ============================================================
+   PART 1 — 数学、地理数据与地形高程合成
+   ============================================================ */
+window.TI = window.TI || {};
+(function (T) {
+  'use strict';
+
+  /* ---------------- 数学 ---------------- */
+  var M = T.M = {};
+  M.clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
+  M.lerp = function (a, b, t) { return a + (b - a) * t; };
+  M.rad = function (d) { return d * Math.PI / 180; };
+  M.deg = function (r) { return r * 180 / Math.PI; };
+  M.smooth = function (t) { return t * t * (3 - 2 * t); };
+
+  function mul(a, b) {
+    var o = new Float32Array(16), i, j, k;
+    for (j = 0; j < 4; j++) for (i = 0; i < 4; i++) {
+      var s = 0; for (k = 0; k < 4; k++) s += a[k * 4 + j] * b[i * 4 + k];
+      o[i * 4 + j] = s;
+    }
+    return o;
+  }
+  M.mul = mul;
+
+  M.perspective = function (fovy, aspect, near, far) {
+    var f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
+    return new Float32Array([
+      f / aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0, (far + near) * nf, -1,
+      0, 0, 2 * far * near * nf, 0
+    ]);
+  };
+
+  M.lookAt = function (eye, center, up) {
+    var z0 = eye[0] - center[0], z1 = eye[1] - center[1], z2 = eye[2] - center[2];
+    var l = Math.hypot(z0, z1, z2) || 1; z0 /= l; z1 /= l; z2 /= l;
+    var x0 = up[1] * z2 - up[2] * z1, x1 = up[2] * z0 - up[0] * z2, x2 = up[0] * z1 - up[1] * z0;
+    l = Math.hypot(x0, x1, x2) || 1; x0 /= l; x1 /= l; x2 /= l;
+    var y0 = z1 * x2 - z2 * x1, y1 = z2 * x0 - z0 * x2, y2 = z0 * x1 - z1 * x0;
+    return new Float32Array([
+      x0, y0, z0, 0, x1, y1, z1, 0, x2, y2, z2, 0,
+      -(x0 * eye[0] + x1 * eye[1] + x2 * eye[2]),
+      -(y0 * eye[0] + y1 * eye[1] + y2 * eye[2]),
+      -(z0 * eye[0] + z1 * eye[1] + z2 * eye[2]), 1
+    ]);
+  };
+
+  M.invert = function (m) {
+    var a00 = m[0], a01 = m[1], a02 = m[2], a03 = m[3],
+      a10 = m[4], a11 = m[5], a12 = m[6], a13 = m[7],
+      a20 = m[8], a21 = m[9], a22 = m[10], a23 = m[11],
+      a30 = m[12], a31 = m[13], a32 = m[14], a33 = m[15];
+    var b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10,
+      b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12,
+      b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30,
+      b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32;
+    var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    if (!det) return null; det = 1 / det;
+    return new Float32Array([
+      (a11 * b11 - a12 * b10 + a13 * b09) * det,
+      (a02 * b10 - a01 * b11 - a03 * b09) * det,
+      (a31 * b05 - a32 * b04 + a33 * b03) * det,
+      (a22 * b04 - a21 * b05 - a23 * b03) * det,
+      (a12 * b08 - a10 * b11 - a13 * b07) * det,
+      (a00 * b11 - a02 * b08 + a03 * b07) * det,
+      (a32 * b02 - a30 * b05 - a33 * b01) * det,
+      (a20 * b05 - a22 * b02 + a23 * b01) * det,
+      (a10 * b10 - a11 * b08 + a13 * b06) * det,
+      (a01 * b08 - a00 * b10 - a03 * b06) * det,
+      (a30 * b04 - a31 * b02 + a33 * b00) * det,
+      (a21 * b02 - a20 * b04 - a23 * b00) * det,
+      (a11 * b07 - a10 * b09 - a12 * b06) * det,
+      (a00 * b09 - a01 * b07 + a02 * b06) * det,
+      (a31 * b01 - a30 * b03 - a32 * b00) * det,
+      (a20 * b03 - a21 * b01 + a22 * b00) * det
+    ]);
+  };
+
+  /* ---------------- 投影常量 ---------------- */
+  var KZ = 1.55;                       // 单位 / 纬度
+  var KX = KZ * Math.cos(M.rad(35));   // 单位 / 经度
+  var LON0 = 104.5, LAT0 = 35.5, VS = 10; // 视觉高度比例（8848m -> 10 单位，约 90 倍垂直夸大）
+  var LON_A = 73, LON_B = 136, LAT_A = 17, LAT_B = 54;
+
+  T.geo = {
+    KZ: KZ, KX: KX, LON0: LON0, LAT0: LAT0, VS: VS,
+    LON_A: LON_A, LON_B: LON_B, LAT_A: LAT_A, LAT_B: LAT_B,
+    toWorld: function (lon, lat, h) {
+      return [(lon - LON0) * KX, (h || 0) / 8848 * VS, -(lat - LAT0) * KZ];
+    },
+    toLL: function (x, z) { return [LON0 + x / KX, LAT0 - z / KZ]; }
+  };
+
+  /* ---------------- 国界（示意） ---------------- */
+  T.CHINA = [
+    [124.5, 53.3], [126.5, 51.5], [130.7, 48.9], [134.7, 48.4], [131.3, 45.0], [133.0, 45.2],
+    [131.3, 42.9], [130.6, 42.5], [128.0, 41.4], [124.4, 40.0], [121.6, 39.0], [122.0, 37.4],
+    [119.2, 35.0], [121.8, 31.0], [120.2, 27.0], [119.5, 25.0], [117.0, 23.5], [113.5, 22.2],
+    [110.5, 20.2], [108.5, 21.5], [106.7, 22.0], [104.0, 22.5], [101.8, 21.2], [99.2, 22.0],
+    [97.5, 23.9], [98.7, 25.9], [97.5, 28.3], [94.0, 29.0], [91.5, 27.8], [88.9, 27.3],
+    [85.0, 28.3], [81.0, 30.4], [78.8, 31.3], [78.0, 33.0], [75.0, 35.5], [73.5, 38.0],
+    [75.0, 40.5], [79.0, 42.0], [80.5, 45.0], [83.0, 47.2], [85.5, 48.5], [88.0, 49.0],
+    [90.0, 47.8], [93.0, 46.0], [96.5, 44.0], [100.0, 42.6], [104.5, 41.8], [107.5, 42.4],
+    [111.5, 43.7], [116.0, 45.0], [119.0, 47.0], [117.5, 49.6], [120.5, 51.7], [122.5, 53.4]
+  ];
+  T.ISLANDS = [
+    [[121.0, 25.3], [122.0, 25.0], [121.9, 24.2], [120.9, 22.6], [120.2, 22.5], [120.1, 23.5], [120.7, 24.7]],
+    [[109.2, 20.0], [110.3, 20.1], [111.0, 19.6], [110.5, 18.6], [109.4, 18.4], [108.7, 19.3]]
+  ];
+
+  T.inPoly = function (lon, lat, poly) {
+    var inside = false, n = poly.length;
+    for (var i = 0, j = n - 1; i < n; j = i++) {
+      var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if (((yi > lat) !== (yj > lat)) && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    return inside;
+  };
+
+  T.isLand = function (lon, lat) {
+    if (T.inPoly(lon, lat, T.CHINA)) return 1;
+    for (var i = 0; i < T.ISLANDS.length; i++) if (T.inPoly(lon, lat, T.ISLANDS[i])) return 1;
+    return 0;
+  };
+
+  /* ---------------- 25 条山脉骨架 ---------------- */
+  // n 名称 / p 走向脊线 / a 隆起幅 / w 宽度(°)/ t 走向 / L 长度(km) / s 是否进入拼图
+  T.RANGES = [
+    { n: '天山', p: [[78, 42], [82, 42.3], [86, 43], [90, 43.2]], a: 1500, w: 0.55, t: '东西走向', L: 2500, s: 1 },
+    { n: '昆仑山', p: [[76, 36.2], [82, 35.8], [88, 36], [94, 36.2], [99, 35.8]], a: 2000, w: 0.6, t: '东西走向', L: 2500, s: 1 },
+    { n: '祁连山', p: [[94.5, 38.8], [98, 38.2], [101, 37.5]], a: 1650, w: 0.5, t: '西北—东南', L: 1000, s: 1 },
+    { n: '喜马拉雅山', p: [[79, 32], [84, 29.5], [88, 28], [92, 27.8]], a: 3200, w: 0.62, t: '东西走向', L: 2400, s: 1 },
+    { n: '唐古拉山', p: [[90, 33], [94, 33.3], [97, 33.5]], a: 1150, w: 0.4, t: '东西走向', L: 700, s: 0 },
+    { n: '冈底斯山', p: [[80, 31.5], [84, 30.8], [88, 30.2]], a: 1400, w: 0.4, t: '东西走向', L: 1400, s: 0 },
+    { n: '横断山', p: [[98.5, 30], [99.5, 27.5], [100.5, 25.5], [101.5, 23.5]], a: 2400, w: 0.52, t: '南北走向', L: 900, s: 1 },
+    { n: '阿尔泰山', p: [[86, 47.5], [88.5, 47], [91, 45.5]], a: 1600, w: 0.5, t: '西北—东南', L: 500, s: 1 },
+    { n: '阴山', p: [[106, 41.2], [110, 41.4], [114, 41.5]], a: 800, w: 0.4, t: '东西走向', L: 1000, s: 1 },
+    { n: '秦岭', p: [[104.5, 33.8], [108, 33.7], [111.5, 33.8]], a: 1300, w: 0.45, t: '东西走向', L: 1500, s: 1 },
+    { n: '大兴安岭', p: [[121.5, 52], [120, 48], [118.5, 45], [117.5, 43]], a: 1100, w: 0.6, t: '东北—西南', L: 1200, s: 1 },
+    { n: '小兴安岭', p: [[126.5, 49.5], [129, 47.5]], a: 600, w: 0.45, t: '西北—东南', L: 500, s: 1 },
+    { n: '长白山', p: [[125.5, 41.5], [128, 42.2], [130, 43]], a: 950, w: 0.45, t: '东北—西南', L: 600, s: 1 },
+    { n: '太行山', p: [[113.5, 40.2], [113.2, 37.5], [112.8, 35.5]], a: 1000, w: 0.35, t: '南北走向', L: 500, s: 1 },
+    { n: '巫山', p: [[108.5, 32], [109.5, 30.5], [110, 29.5]], a: 800, w: 0.3, t: '南北走向', L: 300, s: 1 },
+    { n: '雪峰山', p: [[109.8, 29], [110.5, 27], [111, 26]], a: 700, w: 0.3, t: '南北走向', L: 400, s: 0 },
+    { n: '南岭', p: [[110, 25.2], [113, 25.3], [116, 25.5]], a: 620, w: 0.4, t: '东西走向', L: 600, s: 1 },
+    { n: '武夷山', p: [[116.5, 28.2], [117.5, 26], [118, 24.8]], a: 720, w: 0.35, t: '东北—西南', L: 500, s: 1 },
+    { n: '台湾山脉', p: [[121.2, 24.8], [121.4, 23.3], [121, 22.5]], a: 1500, w: 0.25, t: '南北走向', L: 350, s: 1 },
+    { n: '五指山', p: [[109.5, 19.3], [110, 18.9]], a: 520, w: 0.2, t: '东北—西南', L: 100, s: 0 },
+    { n: '贺兰山', p: [[105.9, 39.2], [106.1, 37.8]], a: 900, w: 0.25, t: '南北走向', L: 200, s: 0 },
+    { n: '六盘山', p: [[106.2, 36.3], [106.5, 35]], a: 700, w: 0.25, t: '南北走向', L: 240, s: 0 },
+    { n: '大别山', p: [[113.8, 31.6], [116, 31.2]], a: 600, w: 0.3, t: '西北—东南', L: 380, s: 0 },
+    { n: '阿尔金山', p: [[89, 38.8], [93, 38.4], [96, 38.2]], a: 1200, w: 0.4, t: '东西走向', L: 700, s: 0 },
+    { n: '巴颜喀拉山', p: [[95, 34.5], [98, 34], [101, 33.6]], a: 1100, w: 0.4, t: '东西走向', L: 800, s: 0 }
+  ];
+
+  /* ---------------- 山峰 ---------------- */
+  T.PEAKS = [
+    { n: '珠穆朗玛峰', lon: 86.925, lat: 27.99, h: 8848.86, tag: '世界最高' },
+    { n: '乔戈里峰', lon: 76.51, lat: 35.88, h: 8611, tag: 'K2' },
+    { n: '贡嘎山', lon: 101.88, lat: 29.6, h: 7556, tag: '蜀山之王' },
+    { n: '玉龙雪山', lon: 100.19, lat: 27.1, h: 5596, tag: '' },
+    { n: '太白山', lon: 107.8, lat: 33.95, h: 3767, tag: '秦岭主峰' },
+    { n: '五台山', lon: 113.6, lat: 39.0, h: 3061, tag: '' },
+    { n: '峨眉山', lon: 103.33, lat: 29.52, h: 3099, tag: '' },
+    { n: '长白山', lon: 128.06, lat: 42.0, h: 2691, tag: '火山' },
+    { n: '华山', lon: 110.08, lat: 34.48, h: 2154.9, tag: '' },
+    { n: '黄山', lon: 118.17, lat: 30.13, h: 1864, tag: '' },
+    { n: '泰山', lon: 117.1, lat: 36.25, h: 1545, tag: '五岳之首' },
+    { n: '玉山', lon: 120.96, lat: 23.47, h: 3952, tag: '台湾最高' }
+  ];
+
+  /* ---------------- 河流（示意） ---------------- */
+  T.RIVERS = [
+    { n: '长江', p: [[91, 33.4], [95, 32.6], [97.5, 31.5], [99.5, 29.5], [101.5, 28.5], [104, 28.8], [106.5, 30.3], [109, 30.8], [111.5, 30.6], [114, 30.6], [117, 30.6], [119, 32.1], [121.7, 31.6]] },
+    { n: '黄河', p: [[96, 34.6], [99.5, 35.2], [102.5, 36.1], [105, 37.4], [107.5, 39.5], [110.5, 40.6], [111, 38], [111.5, 35.5], [114.5, 35.2], [117.5, 37.4], [119, 37.6]] },
+    { n: '珠江', p: [[104, 24.6], [106.8, 23.9], [109.5, 23.3], [112, 23], [113.6, 22.3]] }
+  ];
+
+  /* ---------------- 三级阶梯分界 ---------------- */
+  T.STEPLINES = [
+    { n: '昆仑山—祁连山—横断山', p: [[75, 36.3], [82, 35.9], [88, 36.1], [94, 36.4], [98.5, 38.4], [100.5, 37.4], [100, 33], [99.5, 29.5], [99.8, 26.5]] },
+    { n: '大兴安岭—太行山—巫山—雪峰山', p: [[121, 52], [120, 48], [118.5, 45], [117, 43], [114.5, 41], [113.5, 40], [113, 36.5], [112, 34], [110.5, 32], [110, 30], [110.5, 27.5], [111, 26]] }
+  ];
+
+  /* ---------------- 控制点（教学口径海拔） ---------------- */
+  var CP = [
+    [80, 35, 5000], [84, 34, 5100], [88, 32, 4900], [92, 33, 4600], [96, 33, 4400], [99, 34, 4200],
+    [79, 31, 4600], [83, 30, 4400], [87, 29, 4300], [91, 29, 4200], [95, 30, 4100],
+    [98, 31, 4000], [101, 31, 3600], [102, 33, 3800], [97, 35, 4200], [93, 36, 4400],
+    [88, 36, 4700], [84, 37, 4800], [80, 37, 5200], [94, 37.5, 2900], [97, 37, 3000],
+    [82, 39, 1050], [86, 39.5, 1100], [89, 38.5, 1300], [80, 40, 1400], [78, 38, 3000],
+    [89.2, 42.9, 100], [84, 45, 600], [87, 44.5, 700], [82, 45.5, 800], [80, 45, 1200],
+    [88, 47.5, 2200], [90, 46.5, 1800], [82, 42.5, 2700], [87, 43, 3300], [104, 41, 1400], [108, 42, 1200], [112, 43, 1150],
+    [116, 44, 900], [119, 46, 800], [122, 50, 900], [124, 52, 600],
+    [107, 36.5, 1250], [110, 36.5, 1150], [105, 35, 1400], [107, 33.8, 1800], [110, 33.7, 1500],
+    [105, 30.5, 420], [107, 30, 380], [104, 30.5, 500],
+    [103, 25, 1700], [105, 25.5, 1500], [102, 23.5, 1400], [100, 25, 1800],
+    [124, 45, 160], [126, 46.5, 150], [123, 43.5, 220], [127, 44, 180], [128, 42.5, 900],
+    [117, 26, 450], [119, 27.5, 380], [115, 25, 700], [113, 25, 600],
+    [118, 31, 25], [114, 30.5, 45], [120, 31, 15], [121, 31, 5],
+    [116, 36.5, 50], [118, 38, 30], [114, 33, 90], [117, 34, 60],
+    [119, 36.3, 280], [113, 22.5, 20], [109, 21.5, 30], [121, 39, 20], [122, 37, 10],
+    [121, 23.7, 1200], [109.7, 19.2, 300]
+  ];
+
+  function idw(lon, lat) {
+    var sw = 0, sh = 0;
+    for (var i = 0; i < CP.length; i++) {
+      var dx = lon - CP[i][0], dy = lat - CP[i][1];
+      var d2 = dx * dx + dy * dy + 0.03;
+      if (d2 > 48) continue;
+      var w = 1 / (d2 * d2 * Math.sqrt(d2));   // ≈ d^-5，局部性强
+      sw += w; sh += w * CP[i][2];
+    }
+    return sw > 0 ? sh / sw : 500;
+  }
+
+  // 盆地凹陷（教学口径：盆底高程）
+  var BASINS = [
+    { c: [83.6, 39.4], r: 3.4, t: 1080 },
+    { c: [85.6, 45.1], r: 2.1, t: 580 },
+    { c: [94.6, 37.2], r: 1.5, t: 2900 },
+    { c: [105.6, 30.3], r: 1.8, t: 420 },
+    { c: [89.2, 42.9], r: 0.7, t: 120 }
+  ];
+
+  function segDist(px, py, ax, ay, bx, by) {
+    var vx = bx - ax, vy = by - ay, wx = px - ax, wy = py - ay;
+    var d = vx * vx + vy * vy, t = d > 0 ? (wx * vx + wy * vy) / d : 0;
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    var dx = px - (ax + vx * t), dy = py - (ay + vy * t);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function polyDist(px, py, pts) {
+    var best = 1e9;
+    for (var i = 0; i < pts.length - 1; i++) {
+      var d = segDist(px, py, pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1]);
+      if (d < best) best = d;
+    }
+    return best;
+  }
+  T.polyDist = polyDist;
+
+  function hash2(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function vnoise(x, y) {
+    var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    var a = hash2(xi, yi), b = hash2(xi + 1, yi), c = hash2(xi, yi + 1), d = hash2(xi + 1, yi + 1);
+    return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
+  }
+
+  /* ---------------- 三级阶梯区域判据 ---------------- */
+  // 第一阶梯：青藏高原（昆仑山—祁连山—横断山以西以南）
+  var TIBET = [[75, 36.5], [82, 36.2], [88, 36.4], [94, 36.6], [98.5, 38.6], [101.5, 37.6],
+    [102.5, 34], [102, 31], [100.5, 28], [98.5, 25.6], [95, 25.9], [92, 27.0], [88, 27.1],
+    [84, 27.9], [80, 30.2], [78, 32], [75, 35]];
+  // 柴达木盆地：嵌于第一阶梯
+  var QAIDAM = [[90, 38.9], [98, 38.9], [99, 37], [98, 36.6], [91, 36.6], [89.5, 37.8]];
+  // 二三级分界（大兴安岭—太行山—巫山—雪峰山）：按纬度取分界经度
+  var LINE_B = [[52, 121], [48, 120], [45, 118.5], [43, 117], [41, 114.5], [40, 113.5],
+    [36.5, 113], [34, 112], [32, 110.5], [30, 110], [27.5, 110.5], [26, 111]];
+  function lineB(lat) {
+    if (lat >= 52) return 121;
+    if (lat <= 26) return 111.6;
+    for (var i = 0; i < LINE_B.length - 1; i++) {
+      var a = LINE_B[i], b = LINE_B[i + 1];
+      if (lat <= a[0] && lat >= b[0]) {
+        var t = (a[0] - lat) / (a[0] - b[0]);
+        return a[1] + (b[1] - a[1]) * t;
+      }
+    }
+    return 113;
+  }
+  T.stepOf = function (lon, lat) {
+    if (T.inPoly(lon, lat, TIBET)) return 1;
+    if (T.inPoly(lon, lat, QAIDAM)) return 1;
+    if (lon > lineB(lat)) return 3;
+    return 2;
+  };
+
+  /* ---------------- DEM 合成 ---------------- */
+  T.buildDEM = function (NX, NZ, onStep) {
+    var W = NX, H = NZ;
+    var h = new Float32Array(W * H);
+    var mask = new Uint8Array(W * H);
+    var i, j, k, idx, lon, lat;
+
+    for (j = 0; j < H; j++) {
+      lat = LAT_A + (LAT_B - LAT_A) * j / (H - 1);
+      for (i = 0; i < W; i++) {
+        lon = LON_A + (LON_B - LON_A) * i / (W - 1);
+        idx = j * W + i;
+        var v = idw(lon, lat);
+        // 山脉隆起
+        for (k = 0; k < T.RANGES.length; k++) {
+          var r = T.RANGES[k];
+          var px = r.p[0][0], py = r.p[0][1], qx = r.p[r.p.length - 1][0], qy = r.p[r.p.length - 1][1];
+          if (lon < Math.min(px, qx) - 3 || lon > Math.max(px, qx) + 3 || lat < Math.min(py, qy) - 3 || lat > Math.max(py, qy) + 3) continue;
+          var d = polyDist(lon, lat, r.p);
+          var e = d / r.w;
+          v += r.a * Math.exp(-e * e);
+        }
+        // 盆地压平
+        var bw = 0, bt = 0;
+        for (k = 0; k < BASINS.length; k++) {
+          var B = BASINS[k];
+          var bd = Math.hypot((lon - B.c[0]) * 0.86, lat - B.c[1]) / B.r;
+          if (bd < 1) {
+            var w2 = (1 - bd * bd) * (1 - bd * bd);
+            if (w2 > bw) { bw = w2; bt = B.t; }
+          }
+        }
+        if (bw > 0) v = v * (1 - bw * 0.92) + bt * bw * 0.92;
+        h[idx] = v;
+        mask[idx] = T.isLand(lon, lat);
+      }
+      if (onStep && j % 24 === 0) onStep(j / H * 0.55);
+    }
+
+    // 粗糙度
+    for (j = 0; j < H; j++) {
+      lat = LAT_A + (LAT_B - LAT_A) * j / (H - 1);
+      for (i = 0; i < W; i++) {
+        lon = LON_A + (LON_B - LON_A) * i / (W - 1);
+        idx = j * W + i;
+        var base = h[idx];
+        var amp = 30 + Math.max(0, base) * 0.08;
+        var n = (vnoise(lon * 3.1, lat * 3.1) - 0.5) * 2;
+        var n2 = (vnoise(lon * 8.7 + 13, lat * 8.7 + 7) - 0.5) * 2;
+        var n3 = (vnoise(lon * 21 + 41, lat * 21 + 19) - 0.5) * 2;
+        h[idx] = base + n * amp + n2 * amp * 0.45 + n3 * amp * 0.18;
+      }
+    }
+
+    // 平滑
+    var tmp = new Float32Array(W * H);
+    for (var pass = 0; pass < 2; pass++) {
+      for (j = 0; j < H; j++) for (i = 0; i < W; i++) {
+        var s = 0, wsum = 0;
+        for (var dj = -1; dj <= 1; dj++) for (var di = -1; di <= 1; di++) {
+          var ii = i + di, jj = j + dj;
+          if (ii < 0 || ii >= W || jj < 0 || jj >= H) continue;
+          var wt = (di === 0 ? 2 : 1) * (dj === 0 ? 2 : 1);
+          s += h[jj * W + ii] * wt; wsum += wt;
+        }
+        tmp[j * W + i] = s / wsum;
+      }
+      h.set(tmp);
+    }
+
+    // 山峰校正（置于平滑之后，保证峰顶高程不被抹平）
+    for (k = 0; k < T.PEAKS.length; k++) {
+      var pk = T.PEAKS[k];
+      var ci = Math.round((pk.lon - LON_A) / (LON_B - LON_A) * (W - 1));
+      var cj = Math.round((pk.lat - LAT_A) / (LAT_B - LAT_A) * (H - 1));
+      for (j = Math.max(0, cj - 5); j <= Math.min(H - 1, cj + 5); j++) {
+        for (i = Math.max(0, ci - 5); i <= Math.min(W - 1, ci + 5); i++) {
+          var lo2 = LON_A + (LON_B - LON_A) * i / (W - 1);
+          var la2 = LAT_A + (LAT_B - LAT_A) * j / (H - 1);
+          var dd = Math.max(0, Math.hypot(lo2 - pk.lon, (la2 - pk.lat) * 1.15) - 0.11) / 0.30;
+          var wgt = Math.exp(-dd * dd);
+          var cur = h[j * W + i];
+          if (wgt > 0.03 && pk.h > cur) h[j * W + i] = cur + (pk.h - cur) * wgt;
+        }
+      }
+    }
+
+    // 海陆掩膜 + 海底削平
+    for (idx = 0; idx < W * H; idx++) {
+      if (!mask[idx]) h[idx] = 0;
+      else if (h[idx] < 0) h[idx] = 0;
+    }
+
+    // 分类
+    var step = new Uint8Array(W * H);
+    var land = new Uint8Array(W * H);
+    for (j = 0; j < H; j++) {
+      lat = LAT_A + (LAT_B - LAT_A) * j / (H - 1);
+      for (i = 0; i < W; i++) {
+        lon = LON_A + (LON_B - LON_A) * i / (W - 1);
+        idx = j * W + i;
+        var hh = h[idx];
+        if (!mask[idx]) { step[idx] = 0; land[idx] = 5; continue; }
+        step[idx] = T.stepOf(lon, lat);
+        // 局部起伏
+        var hx1 = h[j * W + Math.min(W - 1, i + 2)], hx0 = h[j * W + Math.max(0, i - 2)];
+        var hz1 = h[Math.min(H - 1, j + 2) * W + i], hz0 = h[Math.max(0, j - 2) * W + i];
+        var relief = Math.hypot(hx1 - hx0, hz1 - hz0) / 4;
+        // 环域高差：判断是否被山地围合而成盆地
+        var sr = 0, cnt = 0, rr = 14;
+        for (var qj = -rr; qj <= rr; qj += rr) {
+          for (var qi = -rr; qi <= rr; qi += rr) {
+            var qx = M.clamp(i + qi, 0, W - 1), qy = M.clamp(j + qj, 0, H - 1);
+            sr += h[qy * W + qx]; cnt++;
+          }
+        }
+        var dep = sr / cnt - hh;
+        var lf;
+        if (dep > 320 && relief < 115 && hh > 250 && hh < 3200) lf = 2;
+        else if (hh > 3000) lf = relief > 150 ? 0 : 1;
+        else if (hh > 700) lf = relief > 92 ? 0 : 1;
+        else if (hh > 200) lf = relief > 44 ? 4 : 3;
+        else lf = relief > 46 ? 4 : 3;
+        land[idx] = lf;
+      }
+    }
+
+    return { W: W, H: H, h: h, mask: mask, step: step, land: land };
+  };
+
+  /* ---------------- 采样 ---------------- */
+  T.sampleH = function (dem, lon, lat) {
+    var fx = (lon - LON_A) / (LON_B - LON_A) * (dem.W - 1);
+    var fy = (lat - LAT_A) / (LAT_B - LAT_A) * (dem.H - 1);
+    fx = M.clamp(fx, 0, dem.W - 1.001); fy = M.clamp(fy, 0, dem.H - 1.001);
+    var i = Math.floor(fx), j = Math.floor(fy), tx = fx - i, ty = fy - j;
+    var a = dem.h[j * dem.W + i], b = dem.h[j * dem.W + i + 1];
+    var c = dem.h[(j + 1) * dem.W + i], d = dem.h[(j + 1) * dem.W + i + 1];
+    return M.lerp(M.lerp(a, b, tx), M.lerp(c, d, tx), ty);
+  };
+
+})(window.TI);
+/* ============================================================
+   PART 2 — 手写 WebGL 渲染管线
+   ============================================================ */
+(function (T) {
+  'use strict';
+  var M = T.M;
+  var E = T.Engine = {};
+
+  var gl = null, canvas = null;
+  var progT = null, progF = null;
+  var bufPos, bufNor, bufH, bufStep, bufLand, terrCount = 0;
+  var flatVBO = null, flatCount = 0;
+  var demRef = null;
+  var dpr = 1;
+
+  var state = {
+    mode: 0,          // 0 阶梯 / 1 地貌 / 2 白膜
+    focus: 0,
+    contour: 1,
+    sea: 1,
+    lines: 1,
+    stepLines: 1,
+    peaks: 0,
+    rivers: 0,
+    curtain: 0,
+    profile: null,    // {pts:[[lon,lat]...]}
+    pillars: [],
+    skeletons: 0,
+    hilite: -1,       // 高亮山脉索引
+    solved: [],       // 已拼合山脉索引
+    measure: []       // 量算取点
+  };
+  E.state = state;
+
+  /* ---------------- 相机 ---------------- */
+  var BASE = 100;
+  var cam = E.cam = {
+    az: 96, el: 38, dist: BASE, tx: 0, ty: 2.5, tz: 0,
+    taz: 96, tel: 38, tdist: BASE, ttx: 0, tty: 2.5, ttz: 0
+  };
+  E.reset = function () {
+    cam.taz = 96; cam.tel = 38; cam.tdist = BASE;
+    cam.ttx = 0; cam.tty = 2.5; cam.ttz = 0;
+  };
+  E.zoomPct = function () { return Math.round(BASE / cam.dist * 100); };
+
+  var mvp = new Float32Array(16);
+
+  /* 视口宽高比补偿：窄屏（竖屏 / 近方形）时后退视距，保证图版不出画 */
+  function fitMul() {
+    var w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
+    var asp = w / Math.max(1, h);
+    return M.clamp(1.5 / asp, 1, 2.6);
+  }
+  E.fitMul = fitMul;
+
+  function eyePos() {
+    var e = M.rad(cam.el), a = M.rad(cam.az), d = cam.dist * fitMul();
+    return [
+      cam.tx + d * Math.cos(e) * Math.cos(a),
+      cam.ty + d * Math.sin(e),
+      cam.tz + d * Math.cos(e) * Math.sin(a)
+    ];
+  }
+
+  /* ---------------- 着色器 ---------------- */
+  var VS_T = [
+    'attribute vec3 aPos;',
+    'attribute vec3 aNor;',
+    'attribute float aH;',
+    'attribute float aStep;',
+    'attribute float aLand;',
+    'uniform mat4 uMVP;',
+    'varying vec3 vNor; varying float vH; varying vec3 vPos; varying float vStep; varying float vLand;',
+    'void main(){',
+    '  vNor = aNor; vH = aH; vPos = aPos; vStep = aStep; vLand = aLand;',
+    '  gl_Position = uMVP * vec4(aPos, 1.0);',
+    '}'
+  ].join('\n');
+
+  var FS_T = [
+    'precision highp float;',
+    'varying vec3 vNor; varying float vH; varying vec3 vPos; varying float vStep; varying float vLand;',
+    'uniform vec3 uC1; uniform vec3 uC2; uniform vec3 uC3;',
+    'uniform vec3 uL1; uniform vec3 uL2; uniform vec3 uL3; uniform vec3 uL4; uniform vec3 uL5;',
+    'uniform vec3 uSea; uniform vec3 uLight;',
+    'uniform float uMode; uniform float uFocus; uniform float uContour;',
+    'void main(){',
+    '  bool isSea = vLand > 4.5;',
+    '  vec3 stepC = vStep < 1.5 ? uC1 : (vStep < 2.5 ? uC2 : uC3);',
+    '  vec3 landC = vLand < 0.5 ? uL1 : (vLand < 1.5 ? uL2 : (vLand < 2.5 ? uL3 : (vLand < 3.5 ? uL4 : uL5)));',
+    '  vec3 base = isSea ? uSea : stepC;',
+    '  if(uMode > 0.5 && uMode < 1.5 && !isSea) base = landC;',
+    '  if(uMode > 1.5) base = isSea ? uSea * 1.15 : vec3(0.855, 0.865, 0.85);',
+    '  vec3 N = normalize(vNor);',
+    '  vec3 L = normalize(uLight);',
+    '  float diff = max(dot(N, L), 0.0);',
+    '  float amb = 0.52;',
+    '  float sh = amb + diff * 0.62;',
+    '  float slope = 1.0 - clamp(N.y, 0.0, 1.0);',
+    '  vec3 col = base * sh;',
+    '  col = mix(col, base * 0.72, slope * 0.5);',
+    '  if(isSea){',
+    '    float gl2 = smoothstep(0.995, 1.0, N.y);',
+    '    col = uSea * (0.9 + 0.1 * gl2);',
+    '  }',
+    '  if(uFocus > 0.5 && !isSea){',
+    '    float foc = abs(vStep - uFocus) < 0.5 ? 1.0 : 0.0;',
+    '    if(foc < 0.5){',
+    '      col = mix(col, vec3(0.085, 0.118, 0.148), 0.68);',
+    '      col = mix(col, vec3(0.30, 0.35, 0.39), 0.10);',
+    '    } else {',
+    '      col *= 1.06;',
+    '    }',
+    '  }',
+    '  if(uContour > 0.5 && !isSea && uMode < 1.5){',
+    '    float fwH = fwidth(vH);',
+    '    float fade = smoothstep(1.0, 26.0, vH);',
+    '    float d5 = abs(fract(vH / 500.0 + 0.5) - 0.5) * 500.0;',
+    '    float l5 = (1.0 - smoothstep(0.0, max(fwH, 0.6) * 1.5, d5)) * fade;',
+    '    float d10 = abs(fract(vH / 1000.0 + 0.5) - 0.5) * 1000.0;',
+    '    float l10 = (1.0 - smoothstep(0.0, max(fwH, 0.6) * 2.1, d10)) * fade;',
+    '    col = mix(col, col * 0.52, l5 * 0.62);',
+    '    col = mix(col, col * 0.30, l10 * 0.55);',
+    '  }',
+    '  gl_FragColor = vec4(col, 1.0);',
+    '}'
+  ].join('\n');
+
+  var VS_F = [
+    'attribute vec3 aPos;', 'attribute vec3 aCol;', 'attribute float aA;',
+    'uniform mat4 uMVP;', 'varying vec3 vCol; varying float vA;',
+    'void main(){ vCol = aCol; vA = aA; gl_Position = uMVP * vec4(aPos, 1.0); }'
+  ].join('\n');
+
+  var FS_F = [
+    'precision mediump float;',
+    'varying vec3 vCol; varying float vA;',
+    'void main(){ gl_FragColor = vec4(vCol, vA); }'
+  ].join('\n');
+
+  function shader(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(s), src);
+      return null;
+    }
+    return s;
+  }
+  function program(vs, fs) {
+    var p = gl.createProgram();
+    var v = shader(gl.VERTEX_SHADER, vs), f = shader(gl.FRAGMENT_SHADER, fs);
+    if (!v || !f) return null;
+    gl.attachShader(p, v); gl.attachShader(p, f); gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(p)); return null; }
+    return p;
+  }
+
+  E.init = function (cv) {
+    canvas = cv;
+    var opts = { antialias: true, alpha: false, powerPreference: 'high-performance' };
+    gl = canvas.getContext('webgl', opts) || canvas.getContext('experimental-webgl', opts);
+    if (!gl) return false;
+    var ext = gl.getExtension('OES_standard_derivatives');
+    if (ext) {
+      progT = program(VS_T, '#extension GL_OES_standard_derivatives : enable\n' + FS_T);
+    }
+    if (!progT) {
+      progT = program(VS_T, FS_T.replace('float fwH = fwidth(vH);', 'float fwH = 16.0;'));
+    }
+    progF = program(VS_F, FS_F);
+    if (!progT || !progF) return false;
+
+    bufPos = gl.createBuffer(); bufNor = gl.createBuffer();
+    bufH = gl.createBuffer(); bufStep = gl.createBuffer(); bufLand = gl.createBuffer();
+    flatVBO = gl.createBuffer();
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.clearColor(0.043, 0.063, 0.082, 1);
+    E.resize();
+    return true;
+  };
+
+  E.resize = function () {
+    if (!gl) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
+    if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+    }
+  };
+
+  /* ---------------- 地形网格 ---------------- */
+  E.setDEM = function (dem) {
+    demRef = dem;
+    var W = dem.W, H = dem.H, KX = T.geo.KX, KZ = T.geo.KZ, VS = T.geo.VS;
+    var lon0 = T.geo.LON_A, lat0 = T.geo.LAT_A;
+    var dLon = (T.geo.LON_B - T.geo.LON_A) / (W - 1);
+    var dLat = (T.geo.LAT_B - T.geo.LAT_A) / (H - 1);
+    var dxw = dLon * KX, dzw = dLat * KZ;
+
+    var cells = (W - 1) * (H - 1);
+    var pos = new Float32Array(cells * 6 * 3);
+    var nor = new Float32Array(cells * 6 * 3);
+    var hs = new Float32Array(cells * 6);
+    var stp = new Float32Array(cells * 6);
+    var lnd = new Float32Array(cells * 6);
+
+    function vy(x, z) {
+      var fx = (x / KX + T.geo.LON0 - lon0) / dLon;
+      var fz = (-z / KZ + T.geo.LAT0 - lat0) / dLat;
+      var i = M.clamp(Math.round(fx), 0, W - 1), j = M.clamp(Math.round(fz), 0, H - 1);
+      return dem.h[j * W + i];
+    }
+
+    var p = 0;
+    for (var j = 0; j < H - 1; j++) {
+      for (var i = 0; i < W - 1; i++) {
+        var quad = [i, j, i + 1, j, i + 1, j + 1, i, j, i + 1, j + 1, i, j + 1];
+        for (var q = 0; q < 6; q++) {
+          var gi = quad[q * 2], gj = quad[q * 2 + 1];
+          var idx = gj * W + gi;
+          var lon = lon0 + dLon * gi, lat = lat0 + dLat * gj;
+          var x = (lon - T.geo.LON0) * KX, z = -(lat - T.geo.LAT0) * KZ;
+          var y = dem.h[idx] / 8848 * VS;
+
+          var iL = Math.max(0, gi - 1), iR = Math.min(W - 1, gi + 1);
+          var jD = Math.max(0, gj - 1), jU = Math.min(H - 1, gj + 1);
+          var fx = (dem.h[gj * W + iR] - dem.h[gj * W + iL]) / 8848 * VS / ((iR - iL) * dxw);
+          var fz = (dem.h[jU * W + gi] - dem.h[jD * W + gi]) / 8848 * VS / (-(jU - jD) * dzw);
+          var nx = -fx, ny = 1, nz = -fz;
+          var nl = Math.hypot(nx, ny, nz) || 1;
+
+          pos[p * 3] = x; pos[p * 3 + 1] = y; pos[p * 3 + 2] = z;
+          nor[p * 3] = nx / nl; nor[p * 3 + 1] = ny / nl; nor[p * 3 + 2] = nz / nl;
+          hs[p] = dem.h[idx];
+          stp[p] = dem.step[idx];
+          lnd[p] = dem.land[idx];
+          p++;
+        }
+      }
+    }
+    terrCount = p;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufPos); gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufNor); gl.bufferData(gl.ARRAY_BUFFER, nor, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufH); gl.bufferData(gl.ARRAY_BUFFER, hs, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufStep); gl.bufferData(gl.ARRAY_BUFFER, stp, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufLand); gl.bufferData(gl.ARRAY_BUFFER, lnd, gl.STATIC_DRAW);
+  };
+
+  /* ---------------- 采样 / 拾取 ---------------- */
+  E.heightAtLL = function (lon, lat) {
+    if (!demRef) return 0;
+    return T.sampleH(demRef, lon, lat);
+  };
+
+  function heightAtWorld(x, z) {
+    var ll = T.geo.toLL(x, z);
+    if (ll[0] < T.geo.LON_A || ll[0] > T.geo.LON_B || ll[1] < T.geo.LAT_A || ll[1] > T.geo.LAT_B) return -999;
+    return T.sampleH(demRef, ll[0], ll[1]) / 8848 * T.geo.VS;
+  }
+  E.heightAtWorld = heightAtWorld;
+
+  function unproject(nx, ny, nz) {
+    var inv = M.invert(mvp); if (!inv) return null;
+    var x = inv[0] * nx + inv[4] * ny + inv[8] * nz + inv[12];
+    var y = inv[1] * nx + inv[5] * ny + inv[9] * nz + inv[13];
+    var z = inv[2] * nx + inv[6] * ny + inv[10] * nz + inv[14];
+    var w = inv[3] * nx + inv[7] * ny + inv[11] * nz + inv[15];
+    if (!w) return null;
+    return [x / w, y / w, z / w];
+  }
+
+  E.pick = function (px, py) {
+    var r = canvas.getBoundingClientRect();
+    var nx = (px - r.left) / r.width * 2 - 1;
+    var ny = -((py - r.top) / r.height * 2 - 1);
+    var a = unproject(nx, ny, -1), b = unproject(nx, ny, 1);
+    if (!a || !b) return null;
+    var dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2];
+    var len = Math.hypot(dx, dy, dz) || 1;
+    dx /= len; dy /= len; dz /= len;
+    var t = 0, prevT = 0, prevGap = null, hit = null;
+    var stepLen = M.clamp(cam.dist / 150, 0.55, 2.6);
+    for (var k = 0; k < 700; k++) {
+      t = k * stepLen;
+      if (t > cam.dist * 3 + 120) break;
+      var x = a[0] + dx * t, y = a[1] + dy * t, z = a[2] + dz * t;
+      var hgt = heightAtWorld(x, z);
+      if (hgt === -999) { prevGap = true; prevT = t; continue; }
+      var gap = y - hgt;
+      if (gap < 0 && prevGap === false) {
+        // 二分细化
+        var lo = prevT, hi = t;
+        for (var s = 0; s < 14; s++) {
+          var mid = (lo + hi) / 2;
+          var mx = a[0] + dx * mid, my = a[1] + dy * mid, mz = a[2] + dz * mid;
+          var mh = heightAtWorld(mx, mz);
+          if (my - mh > 0) lo = mid; else hi = mid;
+        }
+        var ft = (lo + hi) / 2;
+        x = a[0] + dx * ft; y = a[1] + dy * ft; z = a[2] + dz * ft;
+        var ll = T.geo.toLL(x, z);
+        hit = { lon: ll[0], lat: ll[1], h: T.sampleH(demRef, ll[0], ll[1]), w: [x, y, z] };
+        break;
+      }
+      prevGap = gap < 0;
+      prevT = t;
+    }
+    if (!hit) {
+      // 落到基准面
+      if (Math.abs(dy) > 1e-4) {
+        var tt = (0 - a[1]) / dy;
+        if (tt > 0) {
+          var xx = a[0] + dx * tt, zz = a[2] + dz * tt;
+          var l2 = T.geo.toLL(xx, zz);
+          if (l2[0] > T.geo.LON_A && l2[0] < T.geo.LON_B && l2[1] > T.geo.LAT_A && l2[1] < T.geo.LAT_B)
+            hit = { lon: l2[0], lat: l2[1], h: 0, w: [xx, 0, zz] };
+        }
+      }
+    }
+    return hit;
+  };
+
+  E.project = function (w) {
+    var x = mvp[0] * w[0] + mvp[4] * w[1] + mvp[8] * w[2] + mvp[12];
+    var y = mvp[1] * w[0] + mvp[5] * w[1] + mvp[9] * w[2] + mvp[13];
+    var cw = mvp[3] * w[0] + mvp[7] * w[1] + mvp[11] * w[2] + mvp[15];
+    if (cw <= 0.001) return { x: 0, y: 0, ok: false };
+    var r = E._rect || canvas.getBoundingClientRect();
+    return {
+      x: (x / cw * 0.5 + 0.5) * r.width,
+      y: (-y / cw * 0.5 + 0.5) * r.height,
+      ok: true
+    };
+  };
+
+  /* ---------------- 叠加几何构建 ---------------- */
+  var L = { p: [], c: [], a: [] };   // 线
+  var Tg = { p: [], c: [], a: [] };  // 三角
+  function resetGeo() { L.p.length = 0; L.c.length = 0; L.a.length = 0; Tg.p.length = 0; Tg.c.length = 0; Tg.a.length = 0; }
+
+  function ll2w(lon, lat, y) {
+    return [(lon - T.geo.LON0) * T.geo.KX, y, -(lat - T.geo.LAT0) * T.geo.KZ];
+  }
+  function surfY(lon, lat, off) {
+    return T.sampleH(demRef, lon, lat) / 8848 * T.geo.VS + (off || 0.1);
+  }
+
+  function pushLine(ax, ay, az, bx, by, bz, col, alpha, target) {
+    var t = target || L;
+    t.p.push(ax, ay, az, bx, by, bz);
+    t.c.push(col[0], col[1], col[2], col[0], col[1], col[2]);
+    t.a.push(alpha, alpha);
+  }
+
+  function drape(pts, col, alpha, off, dash) {
+    var seg = [];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1];
+      var n = Math.max(2, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 0.22));
+      for (var k = 0; k < n; k++) {
+        var t0 = k / n, t1 = (k + 1) / n;
+        var l0 = a[0] + (b[0] - a[0]) * t0, la0 = a[1] + (b[1] - a[1]) * t0;
+        var l1 = a[0] + (b[0] - a[0]) * t1, la1 = a[1] + (b[1] - a[1]) * t1;
+        if (dash && ((i + k) % 2 === 1)) continue;
+        var w0 = ll2w(l0, la0, surfY(l0, la0, off));
+        var w1 = ll2w(l1, la1, surfY(l1, la1, off));
+        pushLine(w0[0], w0[1], w0[2], w1[0], w1[1], w1[2], col, alpha);
+      }
+    }
+  }
+  E.drape = drape;
+
+  function buildOverlays() {
+    resetGeo();
+    var geo = T.geo;
+
+    /* 图版基座 */
+    var x0 = (geo.LON_A - geo.LON0) * geo.KX, x1 = (geo.LON_B - geo.LON0) * geo.KX;
+    var z0 = -(geo.LAT_B - geo.LAT0) * geo.KZ, z1 = -(geo.LAT_A - geo.LAT0) * geo.KZ;
+    var baseY = -1.9;
+    var sideC = [0.075, 0.098, 0.122];
+    // 四个侧面
+    var sides = [[x0, z0, x1, z0], [x1, z0, x1, z1], [x1, z1, x0, z1], [x0, z1, x0, z0]];
+    for (var s = 0; s < 4; s++) {
+      var q = sides[s];
+      Tg.p.push(q[0], 0, q[1], q[0], baseY, q[1], q[2], baseY, q[3]);
+      Tg.p.push(q[0], 0, q[1], q[2], baseY, q[3], q[2], 0, q[3]);
+      for (var v = 0; v < 6; v++) Tg.c.push(sideC[0], sideC[1], sideC[2]);
+      Tg.a.push(1, 1, 1, 1, 1, 1);
+    }
+    // 底框线
+    var edgeC = [0.30, 0.37, 0.43];
+    pushLine(x0, 0, z0, x1, 0, z0, edgeC, 0.85);
+    pushLine(x1, 0, z0, x1, 0, z1, edgeC, 0.85);
+    pushLine(x1, 0, z1, x0, 0, z1, edgeC, 0.85);
+    pushLine(x0, 0, z1, x0, 0, z0, edgeC, 0.85);
+
+    /* 经纬网 */
+    if (state.lines) {
+      var gc = [0.36, 0.44, 0.50], ga = 0.34;
+      for (var lon = 75; lon <= 135; lon += 5) {
+        var pl = [];
+        for (var la = 17; la <= 54; la += 0.5) pl.push([lon, la]);
+        drape(pl, gc, lon % 15 === 0 ? 0.42 : 0.24, 0.08, false);
+      }
+      for (var lat2 = 20; lat2 <= 50; lat2 += 5) {
+        var pl2 = [];
+        for (var lo = 73; lo <= 136; lo += 0.5) pl2.push([lo, lat2]);
+        drape(pl2, gc, lat2 % 10 === 0 ? 0.42 : 0.24, 0.08, false);
+      }
+    }
+
+    /* 国界 */
+    var bd = T.CHINA, bc = [0.72, 0.79, 0.84];
+    drape(bd, bc, 0.9, 0.16, false);
+    drape([bd[bd.length - 1], bd[0]], bc, 0.9, 0.16, false);
+    for (var isl = 0; isl < T.ISLANDS.length; isl++) {
+      var ip = T.ISLANDS[isl];
+      drape(ip, bc, 0.85, 0.16, false);
+      drape([ip[ip.length - 1], ip[0]], bc, 0.85, 0.16, false);
+    }
+
+    /* 阶梯分界 */
+    if (state.stepLines) {
+      var sc = [0.94, 0.95, 0.96];
+      for (var k = 0; k < T.STEPLINES.length; k++) drape(T.STEPLINES[k].p, sc, 0.8, 0.24, true);
+    }
+
+    /* 河流 */
+    if (state.rivers) {
+      var rc = [0.34, 0.66, 0.78];
+      for (var ri = 0; ri < T.RIVERS.length; ri++) drape(T.RIVERS[ri].p, rc, 0.9, 0.18, false);
+    }
+
+    /* 山峰 */
+    if (state.peaks) {
+      var pc = [0.93, 0.95, 0.96];
+      for (var pi = 0; pi < T.PEAKS.length; pi++) {
+        var P = T.PEAKS[pi];
+        var y = surfY(P.lon, P.lat, 0.3);
+        var w = ll2w(P.lon, P.lat, y);
+        var sz = 0.42;
+        pushLine(w[0] - sz, w[1], w[2], w[0] + sz, w[1], w[2], pc, 0.9);
+        pushLine(w[0], w[1] - sz, w[2], w[0], w[1] + sz, w[2], pc, 0.9);
+        pushLine(w[0], w[1], w[2], w[0], w[1] + sz * 1.9, w[2], [0.88, 0.72, 0.45], 0.75);
+      }
+    }
+
+    /* 山脉骨架 */
+    if (state.skeletons) {
+      for (var si = 0; si < T.RANGES.length; si++) {
+        var R = T.RANGES[si];
+        var done = state.solved.indexOf(si) >= 0;
+        var hot = state.hilite === si;
+        var col = done ? [0.42, 0.82, 0.60] : (hot ? [0.94, 0.72, 0.32] : [0.56, 0.63, 0.68]);
+        var al = done ? 0.95 : (hot ? 1.0 : 0.5);
+        drape(R.p, col, al, 0.3, false);
+        if (hot) {
+          for (var t2 = 0; t2 < R.p.length; t2++) {
+            var ww = ll2w(R.p[t2][0], R.p[t2][1], surfY(R.p[t2][0], R.p[t2][1], 0.3));
+            pushLine(ww[0], ww[1], ww[2], ww[0], ww[1] + 1.5, ww[2], col, 0.8);
+          }
+        }
+      }
+    }
+
+    /* 剖面帘幕 */
+    if (state.curtain && state.profile) {
+      var pts = state.profile.pts;
+      var fine = [];
+      for (var i2 = 0; i2 < pts.length - 1; i2++) {
+        var a2 = pts[i2], b2 = pts[i2 + 1];
+        var n2 = Math.max(6, Math.ceil(Math.hypot(b2[0] - a2[0], b2[1] - a2[1]) / 0.12));
+        for (var m = 0; m < n2; m++) {
+          var tt = m / n2;
+          fine.push([a2[0] + (b2[0] - a2[0]) * tt, a2[1] + (b2[1] - a2[1]) * tt]);
+        }
+      }
+      fine.push(pts[pts.length - 1]);
+      for (var f = 0; f < fine.length - 1; f++) {
+        var f0 = fine[f], f1 = fine[f + 1];
+        var y0 = surfY(f0[0], f0[1], 0.02), y1 = surfY(f1[0], f1[1], 0.02);
+        var w0 = ll2w(f0[0], f0[1], 0), w1 = ll2w(f1[0], f1[1], 0);
+        var w0t = ll2w(f0[0], f0[1], y0), w1t = ll2w(f1[0], f1[1], y1);
+        var hh = T.sampleH(demRef, f0[0], f0[1]);
+        var cc = hh > 3000 ? [0.79, 0.55, 0.36] : (hh > 700 ? [0.84, 0.76, 0.47] : [0.56, 0.75, 0.42]);
+        Tg.p.push(w0[0], 0, w0[2], w0t[0], y0, w0t[2], w1t[0], y1, w1t[2]);
+        Tg.p.push(w0[0], 0, w0[2], w1t[0], y1, w1t[2], w1[0], 0, w1[2]);
+        for (var vv = 0; vv < 6; vv++) Tg.c.push(cc[0] * 0.75, cc[1] * 0.75, cc[2] * 0.75);
+        Tg.a.push(0.42, 0.42, 0.42, 0.42, 0.42, 0.42);
+        pushLine(w0t[0], y0, w0t[2], w1t[0], y1, w1t[2], [0.95, 0.96, 0.97], 0.95);
+        pushLine(w0[0], 0.02, w0[2], w0t[0], y0, w0t[2], [0.85, 0.87, 0.88], 0.35);
+      }
+      // 剖面线本身
+      drape(fine, [1.0, 0.85, 0.55], 1.0, 0.35, false);
+    }
+
+    /* 光柱 */
+    if (state.pillars && state.pillars.length) {
+      for (var p2 = 0; p2 < state.pillars.length; p2++) {
+        var PL = state.pillars[p2];
+        var py = surfY(PL.lon, PL.lat, 0.05);
+        var cc2 = PL.color, al2 = PL.alpha;
+        var R0 = 0.62, R1 = 0.2, HH = PL.height || 16;
+        var segs = 14;
+        for (var a3 = 0; a3 < segs; a3++) {
+          var tA = a3 / segs * Math.PI * 2, tB = (a3 + 1) / segs * Math.PI * 2;
+          var bx0 = Math.cos(tA) * R0, bz0 = Math.sin(tA) * R0;
+          var bx1 = Math.cos(tB) * R0, bz1 = Math.sin(tB) * R0;
+          var tx0 = Math.cos(tA) * R1, tz0 = Math.sin(tA) * R1;
+          var tx1 = Math.cos(tB) * R1, tz1 = Math.sin(tB) * R1;
+          var cx = (PL.lon - T.geo.LON0) * T.geo.KX, cz = -(PL.lat - T.geo.LAT0) * T.geo.KZ;
+          // 侧面
+          Tg.p.push(cx + bx0, py, cz + bz0, cx + tx0, py + HH, cz + tz0, cx + tx1, py + HH, cz + tz1);
+          Tg.p.push(cx + bx0, py, cz + bz0, cx + tx1, py + HH, cz + tz1, cx + bx1, py, cz + bz1);
+          for (var v2 = 0; v2 < 6; v2++) Tg.c.push(cc2[0], cc2[1], cc2[2]);
+          Tg.a.push(al2, al2 * 0.15, al2 * 0.15, al2, al2 * 0.15, al2 * 0.15);
+        }
+        // 底环
+        var ring = [];
+        for (var rr = 0; rr <= 24; rr++) {
+          var ang = rr / 24 * Math.PI * 2;
+          ring.push([cx + Math.cos(ang) * R0 * 1.35, py + 0.06, cz + Math.sin(ang) * R0 * 1.35]);
+        }
+        for (var rl = 0; rl < ring.length - 1; rl++)
+          pushLine(ring[rl][0], ring[rl][1], ring[rl][2], ring[rl + 1][0], ring[rl + 1][1], ring[rl + 1][2], cc2, 0.85);
+        // 中轴
+        pushLine(cx, py, cz, cx, py + HH * 1.05, cz, cc2, 0.55);
+      }
+    }
+
+    /* 量算取点 */
+    if (state.measure && state.measure.length) {
+      var mm = state.measure;
+      for (var mi = 0; mi < mm.length; mi++) {
+        var mp = mm[mi];
+        var my = surfY(mp.lon, mp.lat, 0.3);
+        var mw = ll2w(mp.lon, mp.lat, my);
+        var ac2 = [1.0, 0.84, 0.46];
+        pushLine(mw[0] - 0.95, mw[1], mw[2], mw[0] + 0.95, mw[1], mw[2], ac2, 1);
+        pushLine(mw[0], mw[1], mw[2] - 0.95, mw[0], mw[1], mw[2] + 0.95, ac2, 1);
+        pushLine(mw[0], mw[1], mw[2], mw[0], mw[1] + 2.0, mw[2], ac2, 0.55);
+      }
+      if (mm.length === 2) {
+        drape([[mm[0].lon, mm[0].lat], [mm[1].lon, mm[1].lat]], [1.0, 0.84, 0.46], 0.9, 0.45, true);
+      }
+    }
+
+    // 上传
+    var inter = [];
+    var i3;
+    for (i3 = 0; i3 < Tg.p.length / 3; i3++) {
+      inter.push(Tg.p[i3 * 3], Tg.p[i3 * 3 + 1], Tg.p[i3 * 3 + 2], Tg.c[i3 * 3], Tg.c[i3 * 3 + 1], Tg.c[i3 * 3 + 2], Tg.a[i3]);
+    }
+    for (i3 = 0; i3 < L.p.length / 3; i3++) {
+      inter.push(L.p[i3 * 3], L.p[i3 * 3 + 1], L.p[i3 * 3 + 2], L.c[i3 * 3], L.c[i3 * 3 + 1], L.c[i3 * 3 + 2], L.a[i3]);
+    }
+    flatCount = inter.length / 7;
+    gl.bindBuffer(gl.ARRAY_BUFFER, flatVBO);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(inter), gl.DYNAMIC_DRAW);
+  }
+  E.rebuild = buildOverlays;
+
+  /* ---------------- 渲染 ---------------- */
+  var C = {
+    c1: [0.788, 0.549, 0.357], c2: [0.843, 0.765, 0.467], c3: [0.561, 0.749, 0.416],
+    l1: [0.753, 0.353, 0.227], l2: [0.949, 0.757, 0.306], l3: [0.608, 0.549, 0.941],
+    l4: [0.337, 0.788, 0.541], l5: [0.373, 0.722, 0.839],
+    sea: [0.075, 0.110, 0.140]
+  };
+
+  var needRebuild = true;
+  E.markDirty = function () { needRebuild = true; };
+
+  E.render = function (dt) {
+    if (!gl) return;
+    E.resize();
+    // 阻尼
+    var k = 1 - Math.pow(0.001, dt);
+    cam.az += (cam.taz - cam.az) * k;
+    cam.el += (cam.tel - cam.el) * k;
+    cam.dist += (cam.tdist - cam.dist) * k;
+    cam.tx += (cam.ttx - cam.tx) * k;
+    cam.ty += (cam.tty - cam.ty) * k;
+    cam.tz += (cam.ttz - cam.tz) * k;
+
+    var asp = canvas.width / Math.max(1, canvas.height);
+    var pr = M.perspective(M.rad(45), asp, 1, 900);
+    var eye = eyePos();
+    var vw = M.lookAt(eye, [cam.tx, cam.ty, cam.tz], [0, 1, 0]);
+    var m = M.mul(pr, vw);
+    for (var i = 0; i < 16; i++) mvp[i] = m[i];
+
+    E._rect = canvas.getBoundingClientRect();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // 地形
+    gl.useProgram(progT);
+    gl.uniformMatrix4fv(gl.getUniformLocation(progT, 'uMVP'), false, mvp);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uC1'), C.c1);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uC2'), C.c2);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uC3'), C.c3);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uL1'), C.l1);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uL2'), C.l2);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uL3'), C.l3);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uL4'), C.l4);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uL5'), C.l5);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uSea'), C.sea);
+    gl.uniform3fv(gl.getUniformLocation(progT, 'uLight'), [-0.48, 0.78, 0.40]);
+    gl.uniform1f(gl.getUniformLocation(progT, 'uMode'), state.mode);
+    gl.uniform1f(gl.getUniformLocation(progT, 'uFocus'), state.focus);
+    gl.uniform1f(gl.getUniformLocation(progT, 'uContour'), state.contour ? 1 : 0);
+
+    function attrib(prog, name, buf, size) {
+      var loc = gl.getAttribLocation(prog, name);
+      if (loc < 0) return;
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, 0);
+    }
+    attrib(progT, 'aPos', bufPos, 3);
+    attrib(progT, 'aNor', bufNor, 3);
+    attrib(progT, 'aH', bufH, 1);
+    attrib(progT, 'aStep', bufStep, 1);
+    attrib(progT, 'aLand', bufLand, 1);
+    gl.drawArrays(gl.TRIANGLES, 0, terrCount);
+
+    // 叠加层
+    if (needRebuild) { buildOverlays(); needRebuild = false; }
+    if (flatCount > 0) {
+      gl.useProgram(progF);
+      gl.uniformMatrix4fv(gl.getUniformLocation(progF, 'uMVP'), false, mvp);
+      var lp = gl.getAttribLocation(progF, 'aPos');
+      var lc = gl.getAttribLocation(progF, 'aCol');
+      var la = gl.getAttribLocation(progF, 'aA');
+      gl.bindBuffer(gl.ARRAY_BUFFER, flatVBO);
+      gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp, 3, gl.FLOAT, false, 28, 0);
+      gl.enableVertexAttribArray(lc); gl.vertexAttribPointer(lc, 3, gl.FLOAT, false, 28, 12);
+      gl.enableVertexAttribArray(la); gl.vertexAttribPointer(la, 1, gl.FLOAT, false, 28, 24);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      gl.depthMask(true);
+      gl.drawArrays(gl.TRIANGLES, 0, Tg.p.length / 3);
+      gl.depthMask(false);
+      gl.drawArrays(gl.LINES, Tg.p.length / 3, L.p.length / 3);
+      gl.depthMask(true);
+    }
+  };
+
+  /* ---------------- 交互 ---------------- */
+  E.bind = function () {
+    var dragging = false, mode = 0, lx = 0, ly = 0, moved = 0;
+    var pts = {}, pinchD = 0, pinchMid = null;
+    var lastTap = 0, lastTapXY = [0, 0];
+
+    canvas.style.touchAction = 'none';
+
+    function ptList() {
+      var out = [];
+      for (var k in pts) if (pts.hasOwnProperty(k)) out.push(pts[k]);
+      return out;
+    }
+    function pan(dx, dy) {
+      var s = cam.dist * 0.0019;
+      var a = M.rad(cam.az);
+      var rx = -Math.sin(a), rz = Math.cos(a);
+      var fx = -Math.cos(a), fz = -Math.sin(a);
+      cam.ttx = cam.ttx - rx * dx * s + fx * dy * s;
+      cam.ttz = cam.ttz - rz * dx * s + fz * dy * s;
+    }
+    function centerOn(cx, cy) {
+      var hit = E.pick(cx, cy);
+      if (!hit) return false;
+      var w = T.geo.toWorld(hit.lon, hit.lat, 0);
+      cam.ttx = w[0]; cam.ttz = w[2]; cam.tty = hit.h / 8848 * T.geo.VS;
+      cam.tel = 46;
+      return true;
+    }
+
+    canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+    canvas.addEventListener('pointerdown', function (e) {
+      pts[e.pointerId] = [e.clientX, e.clientY];
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) { }
+      var list = ptList();
+      if (list.length >= 2) {
+        // 双指：缩放 + 平移
+        pinchD = Math.hypot(list[0][0] - list[1][0], list[0][1] - list[1][1]) || 1;
+        pinchMid = [(list[0][0] + list[1][0]) / 2, (list[0][1] + list[1][1]) / 2];
+        dragging = false;
+        return;
+      }
+      dragging = true; mode = (e.button === 0) ? 0 : 1; lx = e.clientX; ly = e.clientY; moved = 0;
+      E._downAt = [e.clientX, e.clientY];
+    });
+
+    canvas.addEventListener('pointermove', function (e) {
+      E._hover = [e.clientX, e.clientY];
+      if (pts[e.pointerId]) pts[e.pointerId] = [e.clientX, e.clientY];
+      var list = ptList();
+      if (list.length >= 2) {
+        var d = Math.hypot(list[0][0] - list[1][0], list[0][1] - list[1][1]) || 1;
+        var mm = [(list[0][0] + list[1][0]) / 2, (list[0][1] + list[1][1]) / 2];
+        if (pinchD > 0) cam.tdist = M.clamp(cam.tdist * (pinchD / d), BASE / 4.5, BASE / 0.2);
+        pinchD = d;
+        if (pinchMid) pan(mm[0] - pinchMid[0], mm[1] - pinchMid[1]);
+        pinchMid = mm;
+        moved += 8;
+        return;
+      }
+      if (!dragging) return;
+      var dx = e.clientX - lx, dy = e.clientY - ly;
+      lx = e.clientX; ly = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
+      if (mode === 0) {
+        cam.taz -= dx * 0.34;
+        cam.tel = M.clamp(cam.tel + dy * 0.28, 4, 88);
+      } else {
+        pan(dx, dy);
+      }
+    });
+
+    function release(e) {
+      delete pts[e.pointerId];
+      if (ptList().length < 2) { pinchD = 0; pinchMid = null; }
+      dragging = false;
+      try { canvas.releasePointerCapture(e.pointerId); } catch (err) { }
+      // 触屏双击居中（移动端不派发 dblclick）
+      if (e.pointerType && e.pointerType !== 'mouse' && ptList().length === 0) {
+        var now = performance.now();
+        if (now - lastTap < 330 &&
+          Math.hypot(e.clientX - lastTapXY[0], e.clientY - lastTapXY[1]) < 26) {
+          centerOn(e.clientX, e.clientY);
+          lastTap = 0;
+          return;
+        }
+        lastTap = now; lastTapXY = [e.clientX, e.clientY];
+      }
+    }
+    canvas.addEventListener('pointerup', release);
+    canvas.addEventListener('pointercancel', release);
+
+    canvas.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      var f = Math.exp(-e.deltaY * 0.0014);
+      cam.tdist = M.clamp(cam.tdist / f, BASE / 4.5, BASE / 0.2);
+    }, { passive: false });
+
+    canvas.addEventListener('dblclick', function (e) { centerOn(e.clientX, e.clientY); });
+    E._drag = { get dragging() { return dragging; }, get moved() { return moved; } };
+  };
+
+})(window.TI);
+/* ============================================================
+   PART 3 — 应用层：首页地球 / 四模块 / 交互 / 音效
+   ============================================================ */
+(function (T) {
+  'use strict';
+  var M = T.M, E = T.Engine;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var clamp = M.clamp;
+
+  /* ---------------- 音效 ---------------- */
+  var AC = window.AudioContext || window.webkitAudioContext;
+  var ac = null, muted = false;
+  function audio() {
+    if (!ac && AC) { try { ac = new AC(); } catch (e) { } }
+    if (ac && ac.state === 'suspended') ac.resume();
+    return ac;
+  }
+  function tone(f, dur, delay, type, vol) {
+    var c = audio(); if (!c || muted) return;
+    var t0 = c.currentTime + (delay || 0);
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0);
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol == null ? 0.07 : vol, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0008, t0 + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + dur + 0.02);
+  }
+  function sfx(kind) {
+    if (muted) return;
+    if (kind === 'ok') { tone(660, .09, 0, 'sine', .07); tone(990, .16, .085, 'sine', .065); }
+    else if (kind === 'bad') { tone(196, .13, 0, 'square', .045); tone(138, .2, .1, 'square', .04); }
+    else if (kind === 'tick') { tone(1500, .03, 0, 'sine', .025); }
+    else if (kind === 'scan') { tone(880, .05, 0, 'sine', .03); tone(1320, .07, .06, 'sine', .025); }
+    else if (kind === 'lock') { tone(520, .06, 0, 'triangle', .05); tone(780, .1, .06, 'triangle', .05); }
+  }
+
+  /* ---------------- 通用 ---------------- */
+  function toast(msg, cls) {
+    var t = $('#toast');
+    t.innerHTML = msg;
+    t.className = 'on ' + (cls || '');
+    clearTimeout(t._tm);
+    t._tm = setTimeout(function () { t.className = ''; }, 2100);
+  }
+  function pad(n, w) { n = String(n); while (n.length < w) n = '0' + n; return n; }
+  function nf(v, d) { return v.toFixed(d == null ? 0 : d); }
+  function thousands(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+  /* ---------------- 启动地球 ---------------- */
+  var globe = { lon: 104, lat: 30, tlon: 104, tlat: 30, drag: false, touched: false, lx: 0, ly: 0 };
+
+  function proj3(lon, lat, cLon, cLat, R, cx, cy) {
+    var p = M.rad(lat), l = M.rad(lon - cLon), p0 = M.rad(cLat);
+    var x = Math.cos(p) * Math.sin(l);
+    var y = Math.cos(p0) * Math.sin(p) - Math.sin(p0) * Math.cos(p) * Math.cos(l);
+    var z = Math.sin(p0) * Math.sin(p) + Math.cos(p0) * Math.cos(p) * Math.cos(l);
+    var d = Math.hypot(x, y);
+    if (z < 0) { if (d > 0.0001) { x /= d; y /= d; } else { x = 0; y = 1; } }
+    return [cx + R * x, cy - R * y, z];
+  }
+
+  var WORLD = [
+    [[-17, 15], [-16, 22], [-10, 27], [0, 32], [10, 37], [20, 32], [32, 31], [35, 25], [39, 15], [43, 11], [51, 12], [43, 0], [40, -10], [35, -20], [32, -26], [25, -34], [18, -34], [12, -18], [9, -1], [9, 4], [-5, 5], [-10, 6], [-14, 11]],
+    [[-10, 36], [-9, 43], [-2, 48], [2, 51], [5, 53], [8, 57], [12, 55], [18, 56], [22, 60], [25, 65], [30, 70], [40, 68], [55, 68], [70, 72], [80, 74], [95, 78], [110, 77], [125, 73], [140, 72], [160, 70], [172, 67], [180, 64], [180, 58], [160, 59], [155, 58], [142, 54], [135, 45], [130, 42], [126, 40], [122, 39], [121, 37], [120, 34], [122, 31], [120, 28], [117, 24], [110, 21], [108, 20], [105, 10], [103, 1], [100, 6], [98, 10], [97, 17], [94, 20], [90, 22], [88, 21], [85, 20], [80, 15], [77, 8], [73, 18], [70, 22], [68, 24], [62, 25], [57, 25], [52, 29], [48, 30], [44, 38], [36, 36], [30, 36], [26, 39], [20, 40], [16, 41], [12, 45], [8, 44], [3, 43], [-3, 36]],
+    [[-168, 66], [-160, 71], [-140, 70], [-125, 70], [-110, 68], [-95, 70], [-80, 73], [-65, 60], [-55, 52], [-60, 47], [-70, 45], [-75, 38], [-81, 31], [-80, 25], [-90, 29], [-97, 26], [-105, 20], [-110, 24], [-115, 30], [-124, 40], [-125, 49], [-135, 58], [-150, 60], [-165, 62]],
+    [[-80, 8], [-75, 11], [-60, 11], [-50, 0], [-35, -6], [-38, -15], [-48, -25], [-58, -35], [-62, -40], [-65, -50], [-70, -55], [-75, -45], [-73, -35], [-71, -20], [-75, -5]],
+    [[114, -22], [122, -17], [130, -12], [137, -12], [142, -11], [146, -19], [150, -25], [153, -28], [150, -37], [143, -39], [135, -35], [129, -32], [115, -34]],
+    [[-45, 60], [-20, 70], [-20, 82], [-60, 82], [-58, 70]],
+    [[130, 31], [135, 34], [141, 41], [145, 44], [142, 39], [137, 35], [131, 31]],
+    [[-6, 50], [-2, 53], [1, 52], [0, 51], [-5, 49]]
+  ];
+
+  function drawGlobe() {
+    var cv = $('#globe'); if (!cv) return;
+    if (cv.style.display === 'none') return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+
+    globe.lon += (globe.tlon - globe.lon) * 0.12;
+    globe.lat += (globe.tlat - globe.lat) * 0.12;
+    if (!globe.drag && !globe.touched) {
+      globe.tlon = 104 + Math.sin(performance.now() * 0.00022) * 7;
+    }
+
+    var cx = w * 0.5, cy = h * 0.5;
+    var R = Math.min(w, h) * 0.345;
+
+    // 光晕底
+    c.beginPath(); c.arc(cx, cy, R * 1.32, 0, 7); c.fillStyle = 'rgba(22,32,42,0.55)'; c.fill();
+
+    // 海洋
+    var grd = c.createRadialGradient(cx - R * 0.3, cy - R * 0.35, R * 0.1, cx, cy, R);
+    grd.addColorStop(0, '#243542');
+    grd.addColorStop(1, '#121c25');
+    c.beginPath(); c.arc(cx, cy, R, 0, 7); c.fillStyle = grd; c.fill();
+
+    // 经纬网
+    c.save();
+    c.beginPath(); c.arc(cx, cy, R, 0, 7); c.clip();
+    c.lineWidth = 1;
+    for (var lo = -180; lo < 180; lo += 15) {
+      var pv = [];
+      for (var la = -90; la <= 90; la += 3) {
+        var q = proj3(lo, la, globe.lon, globe.lat, R, cx, cy);
+        pv.push(q);
+      }
+      c.beginPath();
+      var started = false;
+      for (var i = 0; i < pv.length; i++) {
+        if (pv[i][2] <= 0) { started = false; continue; }
+        if (!started) { c.moveTo(pv[i][0], pv[i][1]); started = true; }
+        else c.lineTo(pv[i][0], pv[i][1]);
+      }
+      c.strokeStyle = 'rgba(96,116,132,0.28)'; c.stroke();
+    }
+    for (var la2 = -75; la2 <= 75; la2 += 15) {
+      var ph = [];
+      for (var lo2 = -180; lo2 <= 180; lo2 += 4) ph.push(proj3(lo2, la2, globe.lon, globe.lat, R, cx, cy));
+      c.beginPath();
+      var st2 = false;
+      for (var j = 0; j < ph.length; j++) {
+        if (ph[j][2] <= 0) { st2 = false; continue; }
+        if (!st2) { c.moveTo(ph[j][0], ph[j][1]); st2 = true; }
+        else c.lineTo(ph[j][0], ph[j][1]);
+      }
+      c.strokeStyle = 'rgba(96,116,132,0.24)'; c.stroke();
+    }
+    c.restore();
+
+    // 陆地
+    for (var k = 0; k < WORLD.length; k++) {
+      var poly = WORLD[k];
+      c.beginPath();
+      for (var m = 0; m < poly.length; m++) {
+        var p2 = proj3(poly[m][0], poly[m][1], globe.lon, globe.lat, R, cx, cy);
+        if (m === 0) c.moveTo(p2[0], p2[1]); else c.lineTo(p2[0], p2[1]);
+      }
+      c.closePath();
+      c.fillStyle = 'rgba(74,92,106,0.92)'; c.fill();
+      c.strokeStyle = 'rgba(126,146,162,0.5)'; c.lineWidth = 0.8; c.stroke();
+    }
+
+    // 中国
+    c.save();
+    c.beginPath(); c.arc(cx, cy, R, 0, 7); c.clip();
+    c.beginPath();
+    for (var n = 0; n < T.CHINA.length; n++) {
+      var pc = proj3(T.CHINA[n][0], T.CHINA[n][1], globe.lon, globe.lat, R * 1.002, cx, cy);
+      if (n === 0) c.moveTo(pc[0], pc[1]); else c.lineTo(pc[0], pc[1]);
+    }
+    c.closePath();
+    c.fillStyle = 'rgba(201,140,91,0.20)'; c.fill();
+    c.strokeStyle = 'rgba(226,232,238,0.92)'; c.lineWidth = 1.1; c.stroke();
+    c.restore();
+
+    // 外圈
+    c.beginPath(); c.arc(cx, cy, R, 0, 7);
+    c.strokeStyle = 'rgba(120,140,156,0.55)'; c.lineWidth = 1; c.stroke();
+    c.beginPath(); c.arc(cx, cy, R * 1.06, 0, 7);
+    c.strokeStyle = 'rgba(70,88,102,0.5)'; c.lineWidth = 1; c.stroke();
+
+    // 中心十字
+    c.strokeStyle = 'rgba(224,163,62,0.75)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(cx - 5, cy); c.lineTo(cx + 5, cy); c.moveTo(cx, cy - 5); c.lineTo(cx, cy + 5); c.stroke();
+    c.beginPath(); c.arc(cx, cy, 11, 0, 7); c.strokeStyle = 'rgba(224,163,62,0.3)'; c.stroke();
+
+    var lo3 = ((globe.lon % 360) + 360) % 360;
+    if (lo3 > 180) lo3 -= 360;
+    var bgl = $('#bgLon'), bgt = $('#bgLat');
+    if (bgl) bgl.textContent = Math.abs(lo3).toFixed(1) + '°' + (lo3 >= 0 ? 'E' : 'W');
+    if (bgt) bgt.textContent = Math.abs(globe.lat).toFixed(1) + '°' + (globe.lat >= 0 ? 'N' : 'S');
+
+    requestAnimationFrame(drawGlobe);
+  }
+
+  function bindGlobe() {
+    var cv = $('#globe');
+    cv.addEventListener('pointerdown', function (e) {
+      globe.drag = true; globe.touched = true; globe.lx = e.clientX; globe.ly = e.clientY;
+      cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener('pointermove', function (e) {
+      if (!globe.drag) return;
+      globe.tlon -= (e.clientX - globe.lx) * 0.28;
+      globe.tlat = clamp(globe.tlat + (e.clientY - globe.ly) * 0.22, -72, 72);
+      globe.lx = e.clientX; globe.ly = e.clientY;
+    });
+    cv.addEventListener('pointerup', function () { globe.drag = false; });
+    cv.addEventListener('pointercancel', function () { globe.drag = false; });
+  }
+
+  /* ================= 数据 ================= */
+  var STEPS = [
+    {
+      no: '第一级阶梯', color: '#c98c5b', avg: '4000 米以上', rank: 4000,
+      center: [88, 33], sub: '高原·山地为主', area: '青藏高原 · 柴达木盆地',
+      detail: '以青藏高原为主体，平均海拔 4000 米以上，号称“世界屋脊”；柴达木盆地嵌于其中。'
+    },
+    {
+      no: '第二级阶梯', color: '#d7c377', avg: '1000 — 2000 米', rank: 1500,
+      center: [107, 37], sub: '高原·盆地为主', area: '内蒙古高原 · 黄土高原 · 塔里木盆地 · 四川盆地',
+      detail: '自青藏高原边缘向北、向东跌落，高原与盆地相间分布，四川盆地在其中最低。'
+    },
+    {
+      no: '第三级阶梯', color: '#8fbf6a', avg: '500 米以下', rank: 250,
+      center: [117, 33], sub: '平原·丘陵为主', area: '东北平原 · 华北平原 · 长江中下游平原 · 东南丘陵',
+      detail: '向东没入海洋，平原与丘陵交错，是我国人口与耕地最集中的一级。'
+    }
+  ];
+
+  var LANDFORMS = [
+    {
+      k: '山地', p: 33, c: '#c05a3a', pt: [99.5, 28.6],
+      dist: '西部、西南与中部山地', rep: '横断山区', alt: '500 — 8848 m',
+      note: '山地与丘陵、崎岖高原合称山区，约占国土面积的 2/3。<b>另有一说：</b>按五类分计，山地约占 33%，与“山地约占 1/3”的表述一致。'
+    },
+    {
+      k: '高原', p: 26, c: '#f2c14e', pt: [88, 33],
+      dist: '青藏、内蒙古、黄土、云贵', rep: '青藏高原', alt: '1000 — 4500 m',
+      note: '青藏高原为世界最高的高原，平均海拔 4000 米以上。<b>另有一说：</b>珠穆朗玛峰高程曾取 8844.43 米（2005 年测量），2020 年公布为 8848.86 米，本仪器取新值。'
+    },
+    {
+      k: '盆地', p: 19, c: '#9b8cf0', pt: [84, 39.5],
+      dist: '塔里木、准噶尔、柴达木、四川', rep: '塔里木盆地', alt: '500 — 3000 m',
+      note: '塔里木盆地为我国最大盆地，面积约 53 万平方千米。<b>另有一说：</b>吐鲁番盆地最低处 −154 米（亦有 −155 米之说），是我国陆地最低点。'
+    },
+    {
+      k: '平原', p: 12, c: '#56c98a', pt: [116.5, 35.2],
+      dist: '东北、华北、长江中下游', rep: '东北平原', alt: '0 — 200 m',
+      note: '三大平原连片分布于第三级阶梯，是主要农耕区；东北平原面积最大，约 35 万平方千米。'
+    },
+    {
+      k: '丘陵', p: 10, c: '#5fb8d6', pt: [117, 26.5],
+      dist: '东南丘陵、山东丘陵、辽东丘陵', rep: '东南丘陵', alt: '200 — 500 m',
+      note: '东南丘陵面积最大，多红壤，宜茶、宜林。'
+    }
+  ];
+
+  var REGIONS = ['青藏高原', '塔里木盆地', '横断山区', '东南丘陵', '东北平原'];
+  var CORRECT = [2, 0, 1, 4, 3];   // 地貌类型 -> 地形区
+  var DISP = [3, 4, 2, 0, 1];      // 右列显示顺序（避让正确配对）
+
+  var S = {
+    mod: 1,
+    focusStep: 0,
+    layers: { contour: 1, grid: 1, steps: 1, peaks: 0, rivers: 0, curtain: 0 },
+    selLand: -1,
+    matchSel: null,
+    matchDone: {},
+    solved: [],
+    quiz: { on: false, i: 0, score: 0, t: 0, cur: -1, started: 0, order: [] },
+    measure: { a: null, b: null }
+  };
+
+  function midOf(range) {
+    var p = range.p, i = Math.floor(p.length / 2);
+    if (p.length % 2 === 0) return [(p[i - 1][0] + p[i][0]) / 2, (p[i - 1][1] + p[i][1]) / 2];
+    return p[i];
+  }
+
+  /* ================= 模块切换 ================= */
+  function flyTo(az, el, dist, tx, ty, tz) {
+    E.cam.taz = az; E.cam.tel = el; E.cam.tdist = dist;
+    E.cam.ttx = tx; E.cam.tty = ty; E.cam.ttz = tz;
+  }
+
+  function scan() {
+    var s = $('#scan'), i = s.querySelector('i');
+    s.style.setProperty('--h', (s.clientHeight - 2) + 'px');
+    s.classList.remove('run');
+    void s.offsetWidth;
+    s.classList.add('run');
+    sfx('scan');
+  }
+
+  function clearOverlays() {
+    var layer = $('#chips');
+    layer.innerHTML = '';
+    layer._slots = {};
+    slotCache = [];
+    $('#target').classList.remove('on');
+    var dc = $('#detailCard');
+    if (dc) { dc.classList.remove('on'); dc.innerHTML = ''; }
+    stopQuiz(true);
+    closeProfile();
+    if (E.state) { E.state.measure = []; E.state.hilite = -1; }
+  }
+
+  function setModule(n) {
+    if (S.mod === n) return;
+    S.mod = n;
+    clearOverlays();
+    $$('.mod').forEach(function (b) { b.classList.toggle('act', +b.dataset.mod === n); });
+    scan();
+    var st = E.state;
+    st.focus = 0; S.focusStep = 0;
+
+    if (n === 1) {
+      st.mode = 0; st.pillars = []; st.skeletons = 0; st.hilite = -1; st.curtain = 0; st.profile = null;
+      $('#panelTitle').textContent = '三级阶梯';
+      $('#panelCode').textContent = 'MOD-01';
+      $('#stageTitle').textContent = '三级阶梯 · 西高东低';
+      flyTo(96, 38, 100, 0, 2.5, 0);
+      buildPanel1();
+    } else if (n === 2) {
+      st.mode = 1; st.skeletons = 0; st.hilite = -1; st.curtain = 0; st.profile = null;
+      $('#panelTitle').textContent = '地形图谱';
+      $('#panelCode').textContent = 'MOD-02';
+      $('#stageTitle').textContent = '地形图谱 · 五类地貌';
+      flyTo(96, 36, 96, 0, 2.5, 0);
+      buildPanel2();
+      applyPillars();
+    } else if (n === 3) {
+      st.mode = 2; st.pillars = []; st.curtain = 0; st.profile = null;
+      st.skeletons = 1; st.hilite = -1; st.solved = S.solved;
+      $('#panelTitle').textContent = '山脉拼图';
+      $('#panelCode').textContent = 'MOD-03';
+      $('#stageTitle').textContent = '山脉拼图 · 白膜浮雕';
+      flyTo(96, 60, 96, 0, 2.5, 0);
+      buildPanel3();
+    } else {
+      st.mode = 0; st.pillars = []; st.skeletons = 0; st.hilite = -1; st.curtain = 0; st.profile = null;
+      $('#panelTitle').textContent = '量算台';
+      $('#panelCode').textContent = 'MOD-04';
+      $('#stageTitle').textContent = '量算台 · 距离与高差';
+      flyTo(96, 40, 88, 0, 2.5, 0);
+      buildPanel4();
+    }
+    E.markDirty();
+  }
+
+  /* ================= 模块一：三级阶梯 ================= */
+  function buildPanel1() {
+    var html = '';
+    html += '<div class="sect"><div class="sect-h">阶梯卡片<em>CLICK TO FOCUS</em><span></span></div>';
+    STEPS.forEach(function (s, i) {
+      var on = S.focusStep === i + 1;
+      html += '<button class="step-card ' + (on ? 'on' : '') + '" data-step="' + (i + 1) + '">' +
+        '<span class="lk">' + lockSVG() + '</span>' +
+        '<span class="sw ' + (i === 1 ? 's2' : i === 2 ? 's3' : '') + '"></span>' +
+        '<span><span class="nm">' + s.no + '</span><span class="el">' + s.avg + ' · ' + s.sub + '</span></span>' +
+        '<span class="pv mono">' + (S.focusStep === i + 1 ? '聚焦中' : '聚焦') + '<br>' + s.area.split(' · ')[0] + '</span>' +
+        '</button>';
+    });
+    html += '</div>';
+
+    html += '<div class="sect"><div class="sect-h">海拔标尺<em>ALTIMETER 0—8000 m</em><span></span></div>' +
+      '<div class="ruler"><canvas id="rulerCv"></canvas></div></div>';
+
+    var layers = [
+      ['contour', '等高线', '500 m'],
+      ['grid', '经纬网', 'GRID'],
+      ['steps', '阶梯分界', 'BOUND'],
+      ['peaks', '山峰标点', 'PEAK'],
+      ['rivers', '水系示意', 'RIVER'],
+      ['curtain', '剖面帘幕', 'SECTION']
+    ];
+    html += '<div class="sect"><div class="sect-h">图层<em>LAYERS</em><span></span></div>';
+    layers.forEach(function (l) {
+      html += '<div class="sw-row ' + (S.layers[l[0]] ? 'on' : '') + '" data-layer="' + l[0] + '">' +
+        '<span class="lb">' + l[1] + ' <em>' + l[2] + '</em></span><span class="sw-box"></span></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="sect"><div class="sect-h">剖面<em>PROFILE</em><span></span></div>' +
+      '<button class="btn pri" id="btnProfile">沿 30°N 拉起剖面帘幕</button>' +
+      '<div class="note"><b>教材口径：</b>第一级阶梯平均海拔 4000 米以上；第二级 1000—2000 米；第三级 500 米以下。分界线：昆仑山—祁连山—横断山；大兴安岭—太行山—巫山—雪峰山。</div></div>';
+
+    $('#panelBody').innerHTML = html;
+
+    $$('.step-card').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var v = +b.dataset.step;
+        S.focusStep = (S.focusStep === v) ? 0 : v;
+        E.state.focus = S.focusStep;
+        if (S.focusStep) {
+          var s = STEPS[S.focusStep - 1];
+          var w = T.geo.toWorld(s.center[0], s.center[1], 0);
+          flyTo(96, 42, 72, w[0], 3, w[2]);
+          sfx('lock');
+        } else {
+          flyTo(96, 38, 100, 0, 2.5, 0);
+        }
+        buildPanel1();
+        drawRuler();
+      });
+    });
+    $$('.sw-row').forEach(function (r) {
+      r.addEventListener('click', function () {
+        var k = r.dataset.layer;
+        S.layers[k] = S.layers[k] ? 0 : 1;
+        applyLayers();
+        r.classList.toggle('on', !!S.layers[k]);
+        sfx('tick');
+      });
+    });
+    var bp = $('#btnProfile');
+    if (bp) bp.addEventListener('click', toggleProfile);
+    drawRuler();
+  }
+
+  function applyLayers() {
+    var L = S.layers;
+    E.state.contour = L.contour;
+    E.state.lines = L.grid;
+    E.state.stepLines = L.steps;
+    E.state.peaks = L.peaks;
+    E.state.rivers = L.rivers;
+    E.markDirty();
+    if (S.mod === 1) {
+      if (L.curtain && !E.state.profile) openProfile();
+      else if (!L.curtain) closeProfile();
+    }
+  }
+
+  function lockSVG() {
+    return '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#e0a33e" stroke-width="1"><rect x="2.5" y="6" width="8" height="5.5"/><path d="M4.5 6V4.2a2 2 0 0 1 4 0V6"/></svg>';
+  }
+
+  function drawRuler() {
+    var cv = $('#rulerCv'); if (!cv) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    cv.width = w * dpr; cv.height = h * dpr;
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+
+    var top = 12, bot = h - 12, leftX = 30;
+    var maxH = 8000;
+    function yOf(hh) { return bot - (hh / maxH) * (bot - top); }
+
+    // 阶梯带
+    STEPS.forEach(function (s, i) {
+      var lo = i === 0 ? 4000 : i === 1 ? 1000 : 0;
+      var hi = i === 0 ? 8000 : i === 1 ? 2000 : 500;
+      c.fillStyle = hexA(s.color, S.focusStep === 0 || S.focusStep === i + 1 ? 0.16 : 0.05);
+      c.fillRect(leftX + 6, yOf(hi), w - leftX - 18, yOf(lo) - yOf(hi));
+    });
+
+    // 刻度
+    c.font = '9px ui-monospace, Menlo, monospace';
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (var hh = 0; hh <= 8000; hh += 500) {
+      var y = yOf(hh);
+      var major = hh % 1000 === 0;
+      c.strokeStyle = major ? 'rgba(83,100,111,0.85)' : 'rgba(58,73,86,0.7)';
+      c.beginPath(); c.moveTo(leftX, y); c.lineTo(leftX + (major ? 10 : 5), y); c.stroke();
+      if (major) {
+        c.fillStyle = '#68767f';
+        c.fillText(hh === 0 ? '0' : (hh / 1000) + 'k', leftX - 4, y);
+      }
+    }
+    c.strokeStyle = 'rgba(83,100,111,0.9)';
+    c.beginPath(); c.moveTo(leftX, top); c.lineTo(leftX, bot); c.stroke();
+
+    // 标记
+    var mark = S.focusStep ? STEPS[S.focusStep - 1].rank : null;
+    if (mark != null) {
+      var ym = yOf(mark);
+      c.strokeStyle = '#e0a33e'; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(leftX + 4, ym); c.lineTo(w - 10, ym); c.stroke();
+      c.fillStyle = '#e0a33e';
+      c.beginPath(); c.moveTo(w - 10, ym); c.lineTo(w - 16, ym - 3.5); c.lineTo(w - 16, ym + 3.5); c.closePath(); c.fill();
+    }
+    c.textAlign = 'left';
+    c.fillStyle = '#53646f';
+    c.fillText('m', w - 22, top - 2);
+  }
+
+  var PROFILE_PTS = null;
+  function profileSamples() {
+    if (PROFILE_PTS) return PROFILE_PTS;
+    var out = [];
+    for (var lon = 80; lon <= 122; lon += 0.25) {
+      out.push({ lon: lon, lat: 30, h: T.sampleH(DEM, lon, 30) });
+    }
+    PROFILE_PTS = out;
+    return out;
+  }
+
+  function openProfile() {
+    var pts = [];
+    for (var lon = 80; lon <= 122; lon += 0.5) pts.push([lon, 30]);
+    E.state.profile = { pts: pts };
+    E.state.curtain = 1;
+    S.layers.curtain = 1;
+    var sw = $$('.sw-row').filter(function (r) { return r.dataset.layer === 'curtain'; })[0];
+    if (sw) sw.classList.add('on');
+    $('#profilePanel').classList.add('on');
+    E.markDirty();
+    $('#ppInfo').textContent = '沿 30°N · 80°E — 122°E · 长约 4 000 km';
+    var s = profileSamples();
+    var mx = 0, mn = 1e9;
+    s.forEach(function (p) { mx = Math.max(mx, p.h); mn = Math.min(mn, p.h); });
+    $('#ppStat').textContent = '最高 ' + nf(mx) + ' m / 最低 ' + nf(mn) + ' m';
+    drawProfile();
+    // 侧视：从正南看向 30°N 剖面
+    var midW = T.geo.toWorld(101, 30, 0);
+    flyTo(90, 14, 104, midW[0], 4, midW[2]);
+  }
+
+  function closeProfile() {
+    E.state.curtain = 0;
+    E.state.profile = null;
+    S.layers.curtain = 0;
+    var pp = $('#profilePanel');
+    if (pp) pp.classList.remove('on');
+    E.markDirty();
+  }
+
+  function toggleProfile() {
+    if ($('#profilePanel').classList.contains('on')) {
+      closeProfile();
+      var sw = $$('.sw-row').filter(function (r) { return r.dataset.layer === 'curtain'; })[0];
+      if (sw) sw.classList.remove('on');
+    } else {
+      openProfile();
+      sfx('lock');
+    }
+  }
+
+  function drawProfile() {
+    var cv = $('#profileCv'); if (!cv) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    cv.width = w * dpr; cv.height = h * dpr;
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+
+    var s = profileSamples();
+    var padL = 44, padR = 18, padT = 14, padB = 24;
+    var iw = w - padL - padR, ih = h - padT - padB;
+    var maxH = 8000;
+    var lonA = 80, lonB = 122;
+    function X(lon) { return padL + (lon - lonA) / (lonB - lonA) * iw; }
+    function Y(hh) { return padT + ih - (hh / maxH) * ih; }
+
+    // 阶梯色带
+    var bands = [[0, 500, '#8fbf6a'], [500, 2000, '#d7c377'], [2000, 8000, '#c98c5b']];
+    bands.forEach(function (b) {
+      c.fillStyle = hexA(b[2], 0.10);
+      c.fillRect(padL, Y(b[1]), iw, Y(b[0]) - Y(b[1]));
+    });
+
+    // 网格
+    c.font = '9px ui-monospace, Menlo, monospace';
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (var hh = 0; hh <= 8000; hh += 1000) {
+      var y = Y(hh);
+      c.strokeStyle = hh === 0 ? 'rgba(83,100,111,0.9)' : 'rgba(42,54,65,0.9)';
+      c.beginPath(); c.moveTo(padL, y); c.lineTo(w - padR, y); c.stroke();
+      c.fillStyle = '#68767f';
+      c.fillText(hh === 0 ? '0' : (hh / 1000) + 'k', padL - 6, y);
+    }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (var lon = 80; lon <= 122; lon += 6) {
+      var x = X(lon);
+      c.strokeStyle = 'rgba(42,54,65,0.9)';
+      c.beginPath(); c.moveTo(x, padT); c.lineTo(x, padT + ih); c.stroke();
+      c.fillStyle = '#68767f';
+      c.fillText(lon + '°E', x, padT + ih + 6);
+    }
+
+    // 剖面面积
+    c.beginPath();
+    c.moveTo(X(s[0].lon), Y(0));
+    s.forEach(function (p) { c.lineTo(X(p.lon), Y(p.h)); });
+    c.lineTo(X(s[s.length - 1].lon), Y(0));
+    c.closePath();
+    c.fillStyle = 'rgba(140,158,172,0.16)';
+    c.fill();
+
+    // 线
+    c.beginPath();
+    s.forEach(function (p, i) { if (i === 0) c.moveTo(X(p.lon), Y(p.h)); else c.lineTo(X(p.lon), Y(p.h)); });
+    c.strokeStyle = '#d7dee5'; c.lineWidth = 1.4; c.stroke();
+
+    // 地形区标注
+    var marks = [[87, '青藏高原'], [104.5, '四川盆地'], [117, '长江中下游平原']];
+    c.font = '10px "PingFang SC","Noto Sans CJK SC",sans-serif';
+    c.textAlign = 'center'; c.textBaseline = 'bottom';
+    marks.forEach(function (m) {
+      var x = X(m[0]);
+      c.fillStyle = 'rgba(214,222,230,0.75)';
+      c.fillText(m[1], x, padT + 12);
+      c.strokeStyle = 'rgba(83,100,111,0.8)';
+      c.beginPath(); c.moveTo(x, padT + 15); c.lineTo(x, padT + 26); c.stroke();
+    });
+
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    c.fillStyle = '#53646f';
+    c.font = '9px ui-monospace, Menlo, monospace';
+    c.fillText('m', 8, padT + 4);
+  }
+
+  /* ================= 模块二：地形图谱 ================= */
+  function donutSVG(sel) {
+    var r = 38, C = 2 * Math.PI * r, off = 0, out = '';
+    LANDFORMS.forEach(function (f, i) {
+      var len = f.p / 100 * C;
+      var op = (sel < 0 || sel === i) ? 1 : 0.26;
+      out += '<circle cx="50" cy="50" r="' + r + '" fill="none" stroke="' + f.c + '" stroke-width="' + (sel === i ? 14 : 11) + '" ' +
+        'stroke-dasharray="' + (len - 1.6) + ' ' + (C - len + 1.6) + '" stroke-dashoffset="' + (-off) + '" ' +
+        'transform="rotate(-90 50 50)" opacity="' + op + '" style="transition:opacity .2s,stroke-width .2s"/>';
+      off += len;
+    });
+    return '<svg viewBox="0 0 100 100">' +
+      '<circle cx="50" cy="50" r="' + (r - 9) + '" fill="none" stroke="#2a3641" stroke-width="0.8"/>' +
+      out + '</svg>';
+  }
+
+
+  function renderDetail() {
+    var box = $('#detailCard');
+    if (!box) return;
+    if (S.mod !== 2 || S.selLand < 0) {
+      box.classList.remove('on');
+      box.innerHTML = '';
+      return;
+    }
+    var f = LANDFORMS[S.selLand];
+    box.classList.add('on');
+    box.innerHTML = '<div class="detail">' +
+      '<div class="detail-h"><span class="d" style="background:' + f.c + '"></span>' +
+      '<b>' + f.k + '</b><em>' + f.p + '%</em></div>' +
+      '<div class="drow"><span class="k">占比</span><span class="v"><b>' + f.p + '%</b> 国土面积</span></div>' +
+      '<div class="drow"><span class="k">分布</span><span class="v">' + f.dist + '</span></div>' +
+      '<div class="drow"><span class="k">代表</span><span class="v">' + f.rep + '</span></div>' +
+      '<div class="drow"><span class="k">海拔</span><span class="v"><b>' + f.alt + '</b></span></div>' +
+      '<div class="note">' + f.note + '</div>' +
+      '<div class="note" style="border-color:#3a4956"><b>着色说明：</b>三维表面为示意着色，面积比例以左侧圆环图的教材口径为准（<b>另有一说：</b>山区约占 2/3）。</div>' +
+      '</div>';
+  }
+
+  function buildPanel2() {
+    var sel = S.selLand;
+    var html = '';
+    html += '<div class="sect"><div class="sect-h">面积构成<em>AREA SHARE</em><span></span></div>';
+    html += '<div class="donut-wrap">' + donutSVG(sel) +
+      '<div class="donut-c"><b>' + (sel >= 0 ? LANDFORMS[sel].p + '%' : '100%') + '</b>' +
+      '<span>' + (sel >= 0 ? LANDFORMS[sel].k : '国土面积') + '</span></div></div>';
+    html += '<div class="chips" style="margin-top:6px">';
+    LANDFORMS.forEach(function (f, i) {
+      html += '<button class="chip ' + (sel === i ? 'on' : '') + '" data-lf="' + i + '" style="color:' + f.c + '">' +
+        '<span class="d" style="background:' + f.c + '"></span><span class="lb">' + f.k + '</span></button>';
+    });
+    html += '</div></div>';
+
+    if (sel < 0) {
+      html += '<div class="sect"><div class="empty" style="margin-top:2px">点击类型芯片或三维光柱<br>右上方展开该类地貌详情</div></div>';
+    }
+
+    html += '<div class="sect"><div class="sect-h">连线挑战<em>MATCH</em><span></span></div>';
+    html += '<div class="match">';
+    LANDFORMS.forEach(function (f, i) {
+      var done = S.matchDone[i];
+      html += '<button class="mnode ' + (done ? 'ok' : '') + '" data-ml="' + i + '">' +
+        '<span class="dot" style="background:' + f.c + '"></span>' + f.k + '</button>';
+      var ri = DISP[i];
+      var okR = false;
+      for (var t = 0; t < 5; t++) if (S.matchDone[t] && CORRECT[t] === ri) okR = true;
+      html += '<button class="mnode ' + (okR ? 'ok' : '') + '" data-mr="' + ri + '">' + REGIONS[ri] + '</button>';
+    });
+    html += '</div><div class="note" id="matchTip">先点左侧地貌类型，再点右侧地形区，配对准即锁定。</div></div>';
+
+    $('#panelBody').innerHTML = html;
+    renderDetail();
+    wirePanel2();
+  }
+
+  function wirePanel2() {
+    $$('.chip').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.dataset.lf;
+        S.selLand = (S.selLand === i) ? -1 : i;
+        applyPillars();
+        buildPanel2();
+        sfx('tick');
+      });
+    });
+    $$('[data-ml]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.classList.contains('ok')) return;
+        S.matchSel = +b.dataset.ml;
+        $$('[data-ml]').forEach(function (x) { x.classList.remove('sel'); });
+        b.classList.add('sel');
+        sfx('tick');
+      });
+    });
+    $$('[data-mr]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.classList.contains('ok') || S.matchSel == null) return;
+        var li = S.matchSel, ri = +b.dataset.mr;
+        var correct = CORRECT[li] === ri;
+        if (correct) {
+          S.matchDone[li] = 1;
+          sfx('ok');
+          S.matchSel = null;
+          buildPanel2();
+          toast('连线正确 · <b>' + LANDFORMS[li].k + '</b> 已锁定', 'ok');
+        } else {
+          b.classList.add('bad');
+          sfx('bad');
+          toast('不匹配，再想想', 'bad');
+          setTimeout(function () { b.classList.remove('bad'); }, 380);
+        }
+      });
+    });
+  }
+
+  function applyPillars() {
+    var ps = [];
+    LANDFORMS.forEach(function (f, i) {
+      var sel = S.selLand;
+      var on = sel < 0 || sel === i;
+      var rgb = hexRGB(f.c);
+      ps.push({
+        lon: f.pt[0], lat: f.pt[1], color: rgb,
+        alpha: on ? (sel === i ? 0.5 : 0.28) : 0.05,
+        height: sel === i ? 22 : 14
+      });
+    });
+    E.state.pillars = ps;
+    E.markDirty();
+  }
+
+  /* ================= 模块三：山脉拼图 ================= */
+  var PIECES = T.RANGES.map(function (r, i) { return { r: r, i: i }; }).filter(function (o) { return o.r.s; });
+
+  function buildPanel3() {
+    var html = '';
+    var solved = S.solved.length;
+    html += '<div class="meter"><div><b>' + solved + '</b><span>已拼合</span></div>' +
+      '<div><b>' + (16 - solved) + '</b><span>待装配</span></div>' +
+      '<div class="' + (S.quiz.on ? 'hi' : '') + '"><b>' + S.quiz.score + '</b><span>打靶得分</span></div></div>';
+
+    html += '<div class="sect"><div class="sect-h">拼装件<em>16 PIECES · 拖至骨架</em><span></span></div>';
+    html += '<div class="tray" id="tray">';
+    PIECES.forEach(function (o) {
+      var done = S.solved.indexOf(o.i) >= 0;
+      html += '<div class="piece ' + (done ? 'done' : '') + '" data-piece="' + o.i + '">' + o.r.n + '</div>';
+    });
+    html += '</div><div class="note">把左侧名称拖到三维图版上对应的白色骨架交点，位置正确即吸附锁定。</div></div>';
+
+    html += '<div class="sect"><div class="sect-h">骨架观察<em>25 SKELETONS</em><span></span></div>';
+    html += '<div class="sw-row on" data-sk="1"><span class="lb">显示 25 条走向骨架 <em>HOVER</em></span><span class="sw-box"></span></div>';
+    html += '<div class="drow" style="border-top:none"><span class="k">悬停读数</span><span class="v" id="skInfo">—</span></div></div>';
+
+    html += '<div class="sect"><div class="sect-h">盲盒打靶<em>10 × 20 s</em><span></span></div>';
+    html += '<div class="btn-row">' +
+      '<button class="btn pri" id="btnQuiz">' + (S.quiz.on ? '中止本轮' : '开始打靶') + '</button>' +
+      '<button class="btn sm" id="btnQuizReset" style="width:auto">清零</button></div>';
+    html += '<div class="note">题目随机抽取 25 条山脉，限时 20 秒；在图版上点中正确位置即得分。</div></div>';
+
+    $('#panelBody').innerHTML = html;
+    wirePanel3();
+    updateChips();
+  }
+
+  function wirePanel3() {
+    var tray = $('#tray');
+    if (tray) {
+      tray.addEventListener('pointerdown', function (e) {
+        var p = e.target.closest('.piece');
+        if (!p || p.classList.contains('done')) return;
+        e.preventDefault();
+        startDrag(+p.dataset.piece, e.clientX, e.clientY, p);
+      });
+    }
+    var bq = $('#btnQuiz');
+    if (bq) bq.addEventListener('click', function () {
+      if (S.quiz.on) stopQuiz(true); else startQuiz();
+    });
+    var br = $('#btnQuizReset');
+    if (br) br.addEventListener('click', function () {
+      S.quiz.score = 0; buildPanel3();
+    });
+    var sk = $('[data-sk]');
+    if (sk) sk.addEventListener('click', function () {
+      E.state.skeletons = E.state.skeletons ? 0 : 1;
+      sk.classList.toggle('on', !!E.state.skeletons);
+      E.markDirty();
+    });
+  }
+
+  /* --- 拖拽拼装 --- */
+  var drag = { on: false, idx: -1, ghost: null, src: null };
+  function startDrag(idx, x, y, src) {
+    drag.on = true; drag.idx = idx; drag.src = src;
+    src.classList.add('drag');
+    var sr = $('#stage').getBoundingClientRect();
+    var g = document.createElement('div');
+    g.className = 'pchip dragging';
+    g.textContent = T.RANGES[idx].n;
+    g.style.left = (x - sr.left) + 'px'; g.style.top = (y - sr.top) + 'px';
+    $('#chips').appendChild(g);
+    drag.ghost = g;
+    document.body.style.cursor = 'grabbing';
+    window.addEventListener('pointermove', moveDrag);
+    window.addEventListener('pointerup', endDrag);
+  }
+  function moveDrag(e) {
+    if (!drag.on) return;
+    var r = $('#stage').getBoundingClientRect();
+    drag.ghost.style.left = (e.clientX - r.left) + 'px';
+    drag.ghost.style.top = (e.clientY - r.top) + 'px';
+    var near = nearestSlot(e.clientX, e.clientY);
+    $$('#chips .slot').forEach(function (s) { s.classList.remove('hot'); });
+    if (near && near.idx === drag.idx) near.el.classList.add('hot');
+  }
+  function endDrag(e) {
+    if (!drag.on) return;
+    drag.on = false;
+    window.removeEventListener('pointermove', moveDrag);
+    window.removeEventListener('pointerup', endDrag);
+    document.body.style.cursor = '';
+    var near = nearestSlot(e.clientX, e.clientY);
+    if (near && near.idx === drag.idx) {
+      if (S.solved.indexOf(drag.idx) < 0) S.solved.push(drag.idx);
+      sfx('ok');
+      toast('<b>' + T.RANGES[drag.idx].n + '</b> 已吸附锁定', 'ok');
+      if (drag.src) { drag.src.classList.add('done'); drag.src.classList.remove('drag'); }
+      var sl = $('#chips .slot[data-i="' + drag.idx + '"]');
+      if (sl) sl.classList.add('filled');
+      E.markDirty();
+      var n = S.solved.length;
+      setTimeout(function () {
+        buildPanel3();
+        if (n === 16) { toast('全部 16 座山脉装配完成', 'ok'); sfx('ok'); }
+      }, 10);
+    } else {
+      sfx('bad');
+      if (drag.src) {
+        drag.src.classList.remove('drag');
+        drag.src.classList.add('bad');
+        (function (el) { setTimeout(function () { el.classList.remove('bad'); }, 380); })(drag.src);
+      }
+    }
+    if (drag.ghost) drag.ghost.remove();
+    drag.ghost = null;
+    $$('#chips .slot').forEach(function (s) { s.classList.remove('hot'); });
+  }
+
+  var slotCache = [];
+  function nearestSlot(cx, cy) {
+    var best = null, bd = 1e9;
+    for (var i = 0; i < slotCache.length; i++) {
+      var s = slotCache[i];
+      var d = Math.hypot(s.x - cx, s.y - cy);
+      if (d < bd) { bd = d; best = s; }
+    }
+    if (best && bd < 70) return best;
+    return null;
+  }
+
+  function updateChips() {
+    if (S.mod !== 3) return;
+    var layer = $('#chips');
+    var stageR = $('#stage').getBoundingClientRect();
+    if (!layer._slots) layer._slots = {};
+    slotCache = [];
+    PIECES.forEach(function (o) {
+      var m = midOf(o.r);
+      var w = T.geo.toWorld(m[0], m[1], T.sampleH(DEM, m[0], m[1]));
+      var p = E.project(w);
+      var el = layer._slots[o.i];
+      if (!el) {
+        el = document.createElement('div');
+        el.className = 'slot';
+        el.dataset.i = o.i;
+        layer.appendChild(el);
+        layer._slots[o.i] = el;
+      }
+      if (!p.ok) { el.style.display = 'none'; return; }
+      el.style.display = 'block';
+      el.style.left = p.x + 'px';
+      el.style.top = p.y + 'px';
+      if (S.solved.indexOf(o.i) >= 0) el.classList.add('filled');
+      slotCache.push({ idx: o.i, x: p.x + stageR.left, y: p.y + stageR.top, el: el });
+    });
+  }
+
+  /* --- 盲盒打靶 --- */
+  var quizRAF = 0;
+  function startQuiz() {
+    var order = [];
+    var pool = T.RANGES.map(function (_, i) { return i; });
+    for (var i = 0; i < 10; i++) {
+      var j = Math.floor(Math.random() * pool.length);
+      order.push(pool.splice(j, 1)[0]);
+    }
+    S.quiz = { on: true, i: 0, score: 0, t: 20, cur: -1, started: performance.now(), order: order };
+    $('#target').classList.add('on');
+    nextQuestion();
+    buildPanel3();
+  }
+  function nextQuestion() {
+    var q = S.quiz;
+    if (q.i >= 10) { endQuiz(); return; }
+    q.cur = q.order[q.i];
+    q.t = 20;
+    q.started = performance.now();
+    $('#tgIdx').textContent = pad(q.i + 1, 2) + ' / 10';
+    $('#tgName').textContent = T.RANGES[q.cur].n;
+    $('#tgBar').style.transform = 'scaleX(1)';
+    $('#tgBar').parentNode.classList.remove('warn');
+    if (quizRAF) cancelAnimationFrame(quizRAF);
+    tickQuiz();
+  }
+  function tickQuiz() {
+    var q = S.quiz;
+    if (!q.on) return;
+    var dt = (performance.now() - q.started) / 1000;
+    var left = 20 - dt;
+    if (left <= 0) {
+      $('#tgTime').textContent = '0.0';
+      $('#tgBar').style.transform = 'scaleX(0)';
+      sfx('bad');
+      toast('超时 · 正确位置：<b>' + T.RANGES[q.cur].n + '</b>', 'bad');
+      q.i++;
+      setTimeout(function () { if (S.quiz.on) nextQuestion(); }, 700);
+      return;
+    }
+    $('#tgTime').textContent = left.toFixed(1);
+    $('#tgBar').style.transform = 'scaleX(' + (left / 20) + ')';
+    if (left < 5) $('#tgBar').parentNode.classList.add('warn');
+    quizRAF = requestAnimationFrame(tickQuiz);
+  }
+  function stopQuiz(silent) {
+    S.quiz.on = false;
+    if (quizRAF) cancelAnimationFrame(quizRAF);
+    quizRAF = 0;
+    $('#target').classList.remove('on');
+    if (S.mod === 3 && !silent) buildPanel3();
+  }
+  function endQuiz() {
+    S.quiz.on = false;
+    if (quizRAF) cancelAnimationFrame(quizRAF);
+    $('#target').classList.remove('on');
+    toast('打靶结束 · 得分 <b>' + S.quiz.score + ' / 10</b>', S.quiz.score >= 6 ? 'ok' : 'bad');
+    sfx(S.quiz.score >= 6 ? 'ok' : 'bad');
+    buildPanel3();
+  }
+  function answerQuiz(hit) {
+    var q = S.quiz;
+    if (!q.on || q.cur < 0) return;
+    var m = midOf(T.RANGES[q.cur]);
+    var d = Math.hypot(hit.lon - m[0], (hit.lat - m[1]) * 1.1);
+    if (d < 1.6) {
+      q.score++;
+      sfx('ok');
+      toast('命中 · <b>' + T.RANGES[q.cur].n + '</b>', 'ok');
+      q.i++;
+      setTimeout(function () { if (S.quiz.on) nextQuestion(); }, 620);
+    } else {
+      sfx('bad');
+      toast('位置偏差 ' + nf(d * 92) + ' km', 'bad');
+    }
+  }
+
+  /* ================= 模块四：量算台 ================= */
+  function buildPanel4() {
+    var a = S.measure.a, b = S.measure.b;
+    var html = '';
+    html += '<div class="sect"><div class="sect-h">量算<em>MEASURE</em><span></span></div>';
+    html += '<div class="detail" style="padding:12px 13px">';
+    html += row('起点', a ? fmtLL(a) : '— 点击图版取点');
+    html += row('终点', b ? fmtLL(b) : '— 再次点击');
+    if (a && b) {
+      var R = 6371;
+      var p1 = M.rad(a.lat), p2 = M.rad(b.lat), dl = M.rad(b.lon - a.lon);
+      var hv = Math.sin((p2 - p1) / 2) * Math.sin((p2 - p1) / 2) +
+        Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) * Math.sin(dl / 2);
+      var dist = 2 * R * Math.asin(Math.min(1, Math.sqrt(hv)));
+      var dh = b.h - a.h;
+      var slope = Math.atan2(dh, dist * 1000) * 180 / Math.PI;
+      html += row('水平距离', '<b>' + nf(dist, 1) + '</b> km');
+      html += row('高差', '<b>' + (dh >= 0 ? '+' : '') + nf(dh) + '</b> m');
+      html += row('平均坡度', '<b>' + nf(slope, 1) + '°</b> / ' + nf(Math.tan(Math.abs(slope) * Math.PI / 180) * 100, 1) + '%');
+      html += row('最高处', '<b>' + nf(Math.max(a.h, b.h)) + '</b> m');
+      html += row('最低处', '<b>' + nf(Math.min(a.h, b.h)) + '</b> m');
+    }
+    html += '</div>';
+    html += '<div class="btn-row" style="margin-top:8px">' +
+      '<button class="btn" id="btnMeasureClear">清除取点</button>' +
+      '<button class="btn pri" id="btnMeasureProf">' + (a && b ? '生成剖面' : '生成剖面') + '</button></div>';
+    html += '<div class="note">在图版上依次点击两点即得球面距离与高差；按住右键可平移后再取点。计算按 6371 km 球面半径。</div></div>';
+
+    html += '<div class="sect"><div class="sect-h">读图训练<em>随手记</em><span></span></div>';
+    html += '<div class="note" style="margin-top:0">① 我国地势西高东低，呈三级阶梯状分布；<br>② 第三级阶梯以平原、丘陵为主；<br>③ 沿 30°N 自西向东：青藏高原 → 四川盆地 → 长江中下游平原。</div></div>';
+
+    $('#panelBody').innerHTML = html;
+
+    E.state.measure = [];
+    if (S.measure.a) E.state.measure.push(S.measure.a);
+    if (S.measure.b) E.state.measure.push(S.measure.b);
+    E.markDirty();
+
+    var bc = $('#btnMeasureClear');
+    if (bc) bc.addEventListener('click', function () {
+      S.measure.a = null; S.measure.b = null; E.markDirty(); buildPanel4(); sfx('tick');
+    });
+    var bp = $('#btnMeasureProf');
+    if (bp) bp.addEventListener('click', function () {
+      if (!S.measure.a || !S.measure.b) { toast('先取两个点', 'bad'); return; }
+      openMeasureProfile();
+    });
+  }
+  function row(k, v) {
+    return '<div class="drow"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>';
+  }
+  function fmtLL(p) {
+    return nf(p.lon, 2) + '°E / ' + nf(p.lat, 2) + '°N';
+  }
+
+  var MEAS_PTS = null;
+  function openMeasureProfile() {
+    var a = S.measure.a, b = S.measure.b;
+    var pts = [], n = 60;
+    for (var i = 0; i <= n; i++) {
+      var t = i / n;
+      pts.push([a.lon + (b.lon - a.lon) * t, a.lat + (b.lat - a.lat) * t]);
+    }
+    E.state.profile = { pts: pts };
+    E.state.curtain = 1;
+    E.markDirty();
+    $('#profilePanel').classList.add('on');
+    $('#ppInfo').textContent = '沿 ' + fmtLL(a) + ' → ' + fmtLL(b);
+    MEAS_PTS = pts.map(function (p) { return { lon: p[0], lat: p[1], h: T.sampleH(DEM, p[0], p[1]) }; });
+    var mx = 0, mn = 1e9;
+    MEAS_PTS.forEach(function (p) { mx = Math.max(mx, p.h); mn = Math.min(mn, p.h); });
+    $('#ppStat').textContent = '最高 ' + nf(mx) + ' m / 最低 ' + nf(mn) + ' m';
+    drawProfileDynamic(MEAS_PTS);
+  }
+
+  function drawProfileDynamic(samples) {
+    var cv = $('#profileCv'); if (!cv) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    cv.width = w * dpr; cv.height = h * dpr;
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+
+    var padL = 44, padR = 18, padT = 14, padB = 24;
+    var iw = w - padL - padR, ih = h - padT - padB;
+    var maxH = Math.max(1000, Math.ceil(Math.max.apply(null, samples.map(function (s) { return s.h; })) / 1000) * 1000);
+    function Y(hh) { return padT + ih - (hh / maxH) * ih; }
+    function X(i) { return padL + i / (samples.length - 1) * iw; }
+
+    var bands = [[0, 500, '#8fbf6a'], [500, 2000, '#d7c377'], [2000, 8000, '#c98c5b']];
+    bands.forEach(function (b) {
+      if (b[0] > maxH) return;
+      c.fillStyle = hexA(b[2], 0.10);
+      c.fillRect(padL, Y(Math.min(b[1], maxH)), iw, Y(b[0]) - Y(Math.min(b[1], maxH)));
+    });
+
+    c.font = '9px ui-monospace, Menlo, monospace';
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    var stepM = maxH > 4000 ? 2000 : 1000;
+    for (var hh = 0; hh <= maxH; hh += stepM) {
+      var y = Y(hh);
+      c.strokeStyle = 'rgba(42,54,65,0.9)';
+      c.beginPath(); c.moveTo(padL, y); c.lineTo(w - padR, y); c.stroke();
+      c.fillStyle = '#68767f';
+      c.fillText(hh === 0 ? '0' : (hh / 1000) + 'k', padL - 6, y);
+    }
+
+    c.beginPath();
+    c.moveTo(X(0), Y(0));
+    samples.forEach(function (p, i) { c.lineTo(X(i), Y(p.h)); });
+    c.lineTo(X(samples.length - 1), Y(0));
+    c.closePath();
+    c.fillStyle = 'rgba(140,158,172,0.16)';
+    c.fill();
+
+    c.beginPath();
+    samples.forEach(function (p, i) { if (i === 0) c.moveTo(X(i), Y(p.h)); else c.lineTo(X(i), Y(p.h)); });
+    c.strokeStyle = '#d7dee5'; c.lineWidth = 1.4; c.stroke();
+
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    c.fillStyle = '#53646f';
+    c.fillText('m', 8, padT + 4);
+    c.textAlign = 'right';
+    c.fillText('两点剖面', w - padR, h - 6);
+  }
+
+  /* ================= 视窗点击 ================= */
+  function onStageClick(e) {
+    if (e.button !== 0) return;
+    var hit = E.pick(e.clientX, e.clientY);
+    if (!hit) return;
+    if (S.mod === 1) {
+      if (Math.abs(hit.lat - 30) < 0.75 && hit.lon > 79 && hit.lon < 123) {
+        if (!$('#profilePanel').classList.contains('on')) {
+          openProfile(); sfx('lock');
+        }
+      }
+    } else if (S.mod === 2) {
+      var best = -1, bd = 1e9;
+      LANDFORMS.forEach(function (f, i) {
+        var d = Math.hypot(hit.lon - f.pt[0], (hit.lat - f.pt[1]) * 1.1);
+        if (d < bd) { bd = d; best = i; }
+      });
+      if (bd < 4.5) {
+        S.selLand = best; applyPillars(); buildPanel2(); sfx('tick');
+      }
+    } else if (S.mod === 3) {
+      if (S.quiz.on) answerQuiz(hit);
+    } else if (S.mod === 4) {
+      if (!S.measure.a || (S.measure.a && S.measure.b)) {
+        S.measure.a = hit; S.measure.b = null;
+      } else {
+        S.measure.b = hit;
+        sfx('lock');
+      }
+      buildPanel4();
+      E.markDirty();
+    }
+  }
+
+  function drawMeasureMarkers() { }
+
+  /* ================= 画布叠加绘制（2D 覆盖层用小 canvas 省事） ================= */
+  function hexA(hex, a) {
+    var r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+  }
+  function hexRGB(hex) {
+    return [parseInt(hex.slice(1, 3), 16) / 255, parseInt(hex.slice(3, 5), 16) / 255, parseInt(hex.slice(5, 7), 16) / 255];
+  }
+
+  /* ================= 南海诸岛附图 ================= */
+  function drawSCS() {
+    var cv = $('#scs'); if (!cv) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+
+    var lonA = 105, lonB = 125, latA = 2, latB = 24;
+    var pad = 8;
+    function X(lo) { return pad + (lo - lonA) / (lonB - lonA) * (w - pad * 2); }
+    function Y(la) { return h - pad - (la - latA) / (latB - latA) * (h - pad * 2); }
+
+    // 经纬网
+    c.strokeStyle = 'rgba(58,73,86,0.55)'; c.lineWidth = 0.6;
+    for (var lo = 110; lo <= 125; lo += 5) { c.beginPath(); c.moveTo(X(lo), Y(latA)); c.lineTo(X(lo), Y(latB)); c.stroke(); }
+    for (var la = 5; la <= 20; la += 5) { c.beginPath(); c.moveTo(X(lonA), Y(la)); c.lineTo(X(lonB), Y(la)); c.stroke(); }
+
+    // 陆地（华南沿海一线）
+    c.beginPath();
+    var coast = [T.CHINA[17], T.CHINA[18], T.CHINA[19], T.CHINA[16]];
+    coast.forEach(function (p, i) { if (i === 0) c.moveTo(X(p[0]), Y(p[1])); else c.lineTo(X(p[0]), Y(p[1])); });
+    c.lineTo(X(125), Y(24)); c.lineTo(X(105), Y(24)); c.closePath();
+    c.fillStyle = 'rgba(74,92,106,0.85)'; c.fill();
+    c.strokeStyle = 'rgba(126,146,162,0.6)'; c.lineWidth = 0.8; c.stroke();
+
+    // 台湾岛
+    c.beginPath();
+    T.ISLANDS[0].forEach(function (p, i) { if (i === 0) c.moveTo(X(p[0]), Y(p[1])); else c.lineTo(X(p[0]), Y(p[1])); });
+    c.closePath(); c.fillStyle = 'rgba(74,92,106,0.85)'; c.fill();
+    c.strokeStyle = 'rgba(150,170,186,0.75)'; c.stroke();
+
+    // 海南岛
+    c.beginPath();
+    T.ISLANDS[1].forEach(function (p, i) { if (i === 0) c.moveTo(X(p[0]), Y(p[1])); else c.lineTo(X(p[0]), Y(p[1])); });
+    c.closePath(); c.fillStyle = 'rgba(74,92,106,0.85)'; c.fill();
+    c.strokeStyle = 'rgba(150,170,186,0.75)'; c.stroke();
+
+    // 九段线
+    var dashes = [
+      [[108.8, 20.2], [108.4, 17.6]],
+      [[109.2, 15.6], [110.2, 13.2]],
+      [[111.0, 11.2], [112.4, 9.4]],
+      [[113.2, 7.8], [114.6, 6.6]],
+      [[115.4, 6.2], [116.8, 6.4]],
+      [[117.4, 7.2], [118.6, 8.8]],
+      [[119.0, 10.4], [119.8, 12.8]],
+      [[120.2, 14.8], [120.9, 17.2]],
+      [[121.3, 19.0], [121.6, 21.0]]
+    ];
+    c.strokeStyle = 'rgba(226,232,238,0.85)'; c.lineWidth = 1.6;
+    dashes.forEach(function (d) {
+      c.beginPath(); c.moveTo(X(d[0][0]), Y(d[0][1])); c.lineTo(X(d[1][0]), Y(d[1][1])); c.stroke();
+    });
+
+    // 岛礁
+    var isl = [[112.3, 16.8, 2.2], [114.2, 10.4, 2.6], [116.0, 9.0, 1.6], [117.7, 15.1, 1.6], [112.0, 4.5, 1.4]];
+    isl.forEach(function (p) {
+      c.beginPath();
+      c.arc(X(p[0]), Y(p[1]), p[2], 0, 7);
+      c.fillStyle = '#d6dee6'; c.fill();
+    });
+
+    // 标注
+    c.font = '8px ui-monospace, Menlo, monospace';
+    c.fillStyle = 'rgba(150,164,176,0.9)';
+    c.fillText('105°E', X(105) + 1, h - 2);
+    c.fillText('20°N', 2, Y(20) - 3);
+    c.fillStyle = 'rgba(214,222,230,0.75)';
+    c.fillText('曾母暗沙', X(112.0) + 4, Y(4.5) - 4);
+  }
+
+  /* ================= 主循环 ================= */
+  var DEM = null;
+  var last = 0, ftime = 0;
+
+  function loop(t) {
+    var dt = Math.min(0.05, (t - last) / 1000 || 0.016);
+    last = t;
+    E.render(dt);
+
+    // 罗盘
+    var rose = $('#compassRose');
+    if (rose) {
+      var ra = M.rad(E.cam.az), re = M.rad(E.cam.el);
+      var th = Math.atan2(Math.cos(ra), Math.sin(re) * Math.sin(ra)) * 180 / Math.PI;
+      rose.setAttribute('transform', 'rotate(' + th.toFixed(1) + ' 50 50)');
+    }
+
+    ftime += dt;
+    if (ftime > 0.08) {
+      ftime = 0;
+      var az = ((E.cam.az % 360) + 360) % 360;
+      $('#fAz').textContent = pad(az.toFixed(1), 5) + '°';
+      $('#fEl').textContent = (E.cam.el >= 0 ? '+' : '') + E.cam.el.toFixed(1) + '°';
+      $('#fZm').textContent = E.zoomPct() + '%';
+      var st = $('#stView');
+      if (st) st.textContent = '方位 ' + az.toFixed(0) + '° / 俯仰 ' + E.cam.el.toFixed(0) + '° / ' + E.zoomPct() + '%';
+    }
+    if (S.mod === 3) updateChips();
+    if (S.mod === 3 && E.state.hilite >= 0) {
+      var r = T.RANGES[E.state.hilite];
+      var el = $('#skInfo');
+      if (el) el.innerHTML = '<b>' + r.n + '</b> · ' + r.t + ' · 长约 <b>' + r.L + '</b> km';
+    }
+    requestAnimationFrame(loop);
+  }
+
+  /* ================= 悬停读数 / 悬停骨架 ================= */
+  var hoverT = 0;
+  function onMove(e) {
+    if (e.buttons) return;
+    var now = performance.now();
+    if (now - hoverT < 55) return;
+    hoverT = now;
+    var hit = E.pick(e.clientX, e.clientY);
+    if (!hit) {
+      $('#fCur').textContent = '—';
+      $('#fHgt').textContent = '—';
+      return;
+    }
+    $('#fCur').textContent = hit.lon.toFixed(1) + 'E ' + hit.lat.toFixed(1) + 'N';
+    $('#fHgt').textContent = nf(hit.h) + ' m';
+
+    if (S.mod === 3) {
+      var best = -1, bd = 1e9;
+      for (var i = 0; i < T.RANGES.length; i++) {
+        var d = T.polyDist(hit.lon, hit.lat, T.RANGES[i].p);
+        if (d < bd) { bd = d; best = i; }
+      }
+      var prev = E.state.hilite;
+      if (bd < 0.42) {
+        if (prev !== best) { E.state.hilite = best; E.markDirty(); }
+        $('#stage').style.cursor = 'crosshair';
+      } else {
+        if (prev !== -1) { E.state.hilite = -1; E.markDirty(); }
+      }
+    }
+  }
+
+  /* ================= 键盘 ================= */
+  function onKey(e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k >= '1' && k <= '4') { setModule(+k); return; }
+    if (k === 'r' || k === 'R') {
+      E.reset(); S.focusStep = 0; E.state.focus = 0;
+      if (S.mod === 1) { buildPanel1(); drawRuler(); }
+      toast('整机复位', '');
+      sfx('tick');
+    } else if (k === 'f' || k === 'F') {
+      toggleFull();
+    } else if (k === 'm' || k === 'M') {
+      toggleMute();
+    } else if (k === '?' || k === '/' || (k === '？')) {
+      toggleHelp();
+    } else if (k === 'Escape') {
+      if ($('#help').classList.contains('on')) $('#help').classList.remove('on');
+    } else if (k === 'ArrowLeft') { E.cam.taz -= 5; }
+    else if (k === 'ArrowRight') { E.cam.taz += 5; }
+    else if (k === 'ArrowUp') { E.cam.tel = clamp(E.cam.tel + 3, 4, 88); }
+    else if (k === 'ArrowDown') { E.cam.tel = clamp(E.cam.tel - 3, 4, 88); }
+  }
+
+  function toggleMute() {
+    muted = !muted;
+    $('#soundTxt').textContent = muted ? '关' : '开';
+    $('#btnSound').classList.toggle('act', muted);
+    $('#ledTxt').textContent = muted ? '静音' : '系统就绪';
+    $('#ledSys').classList.toggle('on', !muted);
+    if (!muted) { audio(); sfx('tick'); }
+  }
+  function toggleFull() {
+    if (!document.fullscreenElement) {
+      (document.documentElement.requestFullscreen || function () { }).call(document.documentElement);
+    } else {
+      document.exitFullscreen();
+    }
+  }
+  function toggleHelp() {
+    $('#help').classList.toggle('on');
+    sfx('tick');
+  }
+
+  /* ================= 启动流程 ================= */
+  function boot() {
+    var prog = 0, bar = $('#bootProg'), ld = $('#bootLd');
+    var steps = ['正在标定地形基准面 …', '正在合成 1985 国家高程基准 DEM …', '正在铺设等高线与经纬网 …', '正在校准方位罗盘 …'];
+    var ti = 0;
+    var tm = setInterval(function () {
+      prog = Math.min(88, prog + 6 + Math.random() * 9);
+      bar.style.width = prog + '%';
+      if (prog > 30 && ti < steps.length - 1) { ti++; ld.textContent = steps[ti]; }
+    }, 110);
+
+    setTimeout(function () {
+      DEM = T.buildDEM(221, 161);
+      var ok = E.init($('#gl'));
+      if (!ok) {
+        clearInterval(tm);
+        bar.style.width = '100%';
+        $('#bootProg').style.background = '#ff6b4a';
+        ld.textContent = '本机未启用 WebGL，无法启动三维视窗';
+        $('#ledSys').classList.add('bad');
+        $('#ledTxt').textContent = '视窗离线';
+        return;
+      }
+      E.setDEM(DEM);
+      E.bind();
+      $('#stGrid').textContent = '221 × 161';
+      clearInterval(tm);
+      bar.style.width = '100%';
+      ld.textContent = '标定完成 · 可进入';
+      $('#ledTxt').textContent = '系统就绪';
+      startReady();
+    }, 420);
+  }
+
+  function startReady() {
+    var btn = $('#enterBtn');
+    btn.disabled = false;
+    btn.addEventListener('click', function () {
+      audio(); sfx('lock');
+      $('#boot').classList.add('gone');
+      $('#app').classList.add('on');
+      buildPanel1();
+      resizeAll();
+      E.markDirty();
+      requestAnimationFrame(function (t) { last = t; loop(t); });
+      setTimeout(function () { scan(); }, 380);
+      if (window.matchMedia && window.matchMedia('(pointer:coarse)').matches) {
+        setTimeout(function () { toast('单指旋转 · 双指缩放 · 双击居中', 'ok'); }, 1500);
+      }
+      setTimeout(function () {
+        var g = $('#globe'); if (g) g.style.display = 'none';
+      }, 900);
+    });
+  }
+
+  /* ================= 视口 / 横竖屏自适应 ================= */
+  var rotMask = null, rotSkip = false;
+
+  function vpSize() {
+    if (window.visualViewport && window.visualViewport.width) {
+      return [window.visualViewport.width, window.visualViewport.height];
+    }
+    return [window.innerWidth, window.innerHeight];
+  }
+
+  /* 视觉视口高度写入 --vvh：微信内置浏览器顶部工具栏遮挡时的高度兜底 */
+  function setVH() {
+    var h = window.innerHeight;
+    if (window.visualViewport && window.visualViewport.height) {
+      var vh = window.visualViewport.height;
+      if (vh > 160 && vh <= h + 4) h = vh;
+    }
+    document.documentElement.style.setProperty('--vvh', Math.round(h) + 'px');
+  }
+
+  function syncOrient() {
+    var s = vpSize();
+    var portrait = s[1] > s[0] + 1;
+    var coarse = !!(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
+    var small = Math.min(s[0], s[1]) < 640;
+    var show = portrait && (coarse || small) && !rotSkip;
+    document.body.classList.toggle('portrait', portrait);
+    if (!rotMask) rotMask = $('#rotMask');
+    if (rotMask) {
+      rotMask.classList.toggle('on', show);
+      rotMask.setAttribute('aria-hidden', show ? 'false' : 'true');
+    }
+    return portrait;
+  }
+
+  /* 所有画布重新标定尺寸：WebGL 视口 / 剖面 / 南海附图 / 海拔标尺 */
+  function resizeAll() {
+    setVH();
+    syncOrient();
+    E.resize();
+    drawRuler();
+    drawSCS();
+    var pp = $('#profilePanel');
+    if (pp && pp.classList.contains('on')) drawProfile();
+    var sc = $('#scan');
+    if (sc) sc.style.setProperty('--h', (sc.clientHeight - 2) + 'px');
+  }
+
+  /* ================= 绑定 ================= */
+  function wire() {
+    $$('.mod').forEach(function (b) {
+      b.addEventListener('click', function () { setModule(+b.dataset.mod); });
+    });
+    $('#btnHelp').addEventListener('click', toggleHelp);
+    $('#helpClose').addEventListener('click', function () { $('#help').classList.remove('on'); });
+    $('#help').addEventListener('click', function (e) { if (e.target.id === 'help') $('#help').classList.remove('on'); });
+    $('#btnFull').addEventListener('click', toggleFull);
+    $('#btnSound').addEventListener('click', toggleMute);
+    $('#ppClose').addEventListener('click', function () {
+      closeProfile();
+      if (S.mod === 1) {
+        var sw = $$('.sw-row').filter(function (r) { return r.dataset.layer === 'curtain'; })[0];
+        if (sw) sw.classList.remove('on');
+      }
+    });
+
+    var cv = $('#gl');
+    var downX = 0, downY = 0;
+    cv.addEventListener('pointerdown', function (e) { downX = e.clientX; downY = e.clientY; });
+    cv.addEventListener('pointerup', function (e) {
+      if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) < 7) onStageClick(e);
+    });
+    cv.addEventListener('pointermove', onMove);
+
+    window.addEventListener('keydown', onKey);
+
+    /* 横竖屏 / 视觉视口变化：立即重算一次，并延后补算（iOS 旋转后布局延迟收敛） */
+    var vpTm = null, vpTm2 = null;
+    function onViewport() {
+      resizeAll();
+      if (vpTm) clearTimeout(vpTm);
+      if (vpTm2) clearTimeout(vpTm2);
+      vpTm = setTimeout(function () { vpTm = null; resizeAll(); }, 140);
+      vpTm2 = setTimeout(function () { vpTm2 = null; resizeAll(); }, 420);
+    }
+    window.addEventListener('resize', onViewport);
+    window.addEventListener('orientationchange', onViewport);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', onViewport);
+    }
+    window.addEventListener('pageshow', onViewport);
+
+    var skipBtn = $('#rotSkip');
+    if (skipBtn) skipBtn.addEventListener('click', function () {
+      rotSkip = true; syncOrient(); resizeAll();
+    });
+
+    document.addEventListener('fullscreenchange', function () {
+      setTimeout(resizeAll, 120);
+    });
+  }
+
+  window.addEventListener('load', function () {
+    resizeAll();
+    bindGlobe();
+    requestAnimationFrame(drawGlobe);
+    wire();
+    boot();
+    setTimeout(function () { resizeAll(); }, 120);
+  });
+
+})(window.TI);
+</script>
+</body>
+</html>
